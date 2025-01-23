@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <title>Work Tracker</title>
+</head>
+
+<body>
+    <form id="work-entry-form">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="shift">Shift:</label>
+        <select id="shift" name="shift">
+            <option value="morning">Morning</option>
+            <option value="evening">Evening</option>
+            <option value="night">Night</option>
+        </select>
+
+        <label for="hours_worked">Hours Worked:</label>
+        <input type="number" id="hours_worked" name="hours_worked" step="0.1" required>
+
+        <label for="overtime">Overtime:</label>
+        <input type="number" id="overtime" name="overtime" step="0.1">
+
+        <button type="button" id="submit-button">Add Entry</button>
+    </form>
+
+    <script>
+        async function loadWorkEntries() {
+            try {
+                const response = await fetch('/api/work_entries', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const entries = await response.json();
+                    const tableBody = document.getElementById('work-entries');
+                    tableBody.innerHTML = ''; // Bestehende Einträge löschen
+
+                    entries.forEach(entry => {
+                        const row = document.createElement('tr');
+
+                        row.innerHTML = `
+                            <td>${entry.date}</td>
+                            <td>${entry.shift}</td>
+                            <td>${entry.hours_worked}</td>
+                            <td>${entry.overtime}</td>
+                        `;
+
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    console.error('Failed to load entries:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error loading entries:', error);
+            }
+        }
+
+        // Lade Einträge beim Laden der Seite
+        document.addEventListener('DOMContentLoaded', loadWorkEntries);
+    </script>
+
+    <h2>Work Entries</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Schicht</th>
+                <th>Arbeitszeit</th>
+                <th>Differenz</th>
+            </tr>
+        </thead>
+        <tbody id="work-entries">
+            <!-- Dynamische Daten werden hier eingefügt -->
+        </tbody>
+    </table>
+
+</body>
+
+</html>
