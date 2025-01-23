@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,26 @@
     <header>
         <button id="toggle-mode">Light Mode</button>
     </header>
+
+    <form id="work-entry-form">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="shift">Shift:</label>
+        <select id="shift" name="shift">
+            <option value="morning">Morning</option>
+            <option value="evening">Evening</option>
+            <option value="night">Night</option>
+        </select>
+
+        <label for="hours_worked">Hours Worked:</label>
+        <input type="number" id="hours_worked" name="hours_worked" step="0.1" required>
+
+        <label for="overtime">Overtime:</label>
+        <input type="number" id="overtime" name="overtime" step="0.1">
+
+        <button type="button" id="submit-button">Add Entry</button>
+    </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -37,29 +57,8 @@
                 }
             });
         });
-    </script>
 
-    <form id="work-entry-form">
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required>
 
-        <label for="shift">Shift:</label>
-        <select id="shift" name="shift">
-            <option value="morning">Morning</option>
-            <option value="evening">Evening</option>
-            <option value="night">Night</option>
-        </select>
-
-        <label for="hours_worked">Hours Worked:</label>
-        <input type="number" id="hours_worked" name="hours_worked" step="0.1" required>
-
-        <label for="overtime">Overtime:</label>
-        <input type="number" id="overtime" name="overtime" step="0.1">
-
-        <button type="button" id="submit-button">Add Entry</button>
-    </form>
-
-    <script>
         async function loadWorkEntries() {
             try {
                 const response = await fetch('/api/work_entries', {
@@ -96,6 +95,38 @@
 
         // Lade Einträge beim Laden der Seite
         document.addEventListener('DOMContentLoaded', loadWorkEntries);
+
+        document.getElementById("submit-button").addEventListener("click", async function () {
+            const form = document.getElementById("work-entry-form");
+            const data = {
+                date: form.date.value,
+                shift: form.shift.value,
+                hours_worked: parseFloat(form.hours_worked.value),
+                overtime: parseFloat(form.overtime.value || 0) // Standardwert 0, falls leer
+            };
+
+            try {
+                const response = await fetch("/api/work_entries", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert("Entry added successfully!");
+                    form.reset(); // Formular zurücksetzen
+
+                    // Nach erfolgreichem Hinzufügen, Einträge neu laden
+                    await loadWorkEntries();
+                } else {
+                    alert("Failed to add entry: " + response.statusText);
+                }
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
+        });
     </script>
 
     <h2>Work Entries</h2>
