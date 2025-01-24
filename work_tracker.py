@@ -7,9 +7,11 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configure database
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.abspath(
+    os.path.dirname(__file__)
+)  # Absoluter Pfad zum aktuellen Verzeichnis
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f'sqlite:///{os.path.join(BASE_DIR, "work_tracker.db")}'
+    f"sqlite:///{os.path.join(BASE_DIR, 'db', 'work_tracker.db')}"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

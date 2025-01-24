@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
     <title>Work Tracker</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 </head>
 
 <body>
@@ -33,101 +39,6 @@
         <button type="button" id="submit-button">Add Entry</button>
     </form>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleButton = document.getElementById('toggle-mode');
-
-            // Setze den gespeicherten Modus (oder Standard: Dark Mode)
-            const savedMode = localStorage.getItem('theme') || 'dark-mode';
-            document.body.className = savedMode;
-
-            // Setze den Button-Text basierend auf dem Modus
-            toggleButton.textContent = savedMode === 'dark-mode' ? 'Light Mode' : 'Dark Mode';
-
-            // Event-Listener für den Button
-            toggleButton.addEventListener('click', () => {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.className = 'light-mode';
-                    toggleButton.textContent = 'Dark Mode';
-                    localStorage.setItem('theme', 'light-mode');
-                } else {
-                    document.body.className = 'dark-mode';
-                    toggleButton.textContent = 'Light Mode';
-                    localStorage.setItem('theme', 'dark-mode');
-                }
-            });
-        });
-
-
-        async function loadWorkEntries() {
-            try {
-                const response = await fetch('/api/work_entries', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const entries = await response.json();
-                    const tableBody = document.getElementById('work-entries');
-                    tableBody.innerHTML = ''; // Bestehende Einträge löschen
-
-                    entries.forEach(entry => {
-                        const row = document.createElement('tr');
-
-                        row.innerHTML = `
-                            <td>${entry.date}</td>
-                            <td>${entry.shift}</td>
-                            <td>${entry.hours_worked}</td>
-                            <td>${entry.overtime}</td>
-                        `;
-
-                        tableBody.appendChild(row);
-                    });
-                } else {
-                    console.error('Failed to load entries:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error loading entries:', error);
-            }
-        }
-
-        // Lade Einträge beim Laden der Seite
-        document.addEventListener('DOMContentLoaded', loadWorkEntries);
-
-        document.getElementById("submit-button").addEventListener("click", async function () {
-            const form = document.getElementById("work-entry-form");
-            const data = {
-                date: form.date.value,
-                shift: form.shift.value,
-                hours_worked: parseFloat(form.hours_worked.value),
-                overtime: parseFloat(form.overtime.value || 0) // Standardwert 0, falls leer
-            };
-
-            try {
-                const response = await fetch("/api/work_entries", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    alert("Entry added successfully!");
-                    form.reset(); // Formular zurücksetzen
-
-                    // Nach erfolgreichem Hinzufügen, Einträge neu laden
-                    await loadWorkEntries();
-                } else {
-                    alert("Failed to add entry: " + response.statusText);
-                }
-            } catch (error) {
-                console.error("Error submitting form:", error);
-            }
-        });
-    </script>
 
     <h2>Work Entries</h2>
     <table border="1">
@@ -143,6 +54,14 @@
             <!-- Dynamische Daten werden hier eingefügt -->
         </tbody>
     </table>
+
+    <!-- JavaScript einbinden -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
 </body>
 
