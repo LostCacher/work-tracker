@@ -1,182 +1,45 @@
-/* Allgemeiner Hintergrund und Text */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s, color 0.3s;
+/* Button unten rechts */
+#add-work-time {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
-body.dark-mode {
-    background-color: #121212;
-    color: #ffffff;
-}
-
-body.light-mode {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-/* Links */
-a {
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-body.dark-mode a {
-    color: #bb86fc;
-}
-
-body.light-mode a {
-    color: #6200ee;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Tabellen */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode table {
-    background-color: #1e1e1e;
-    color: #ffffff;
-}
-
-body.light-mode table {
-    background-color: #f9f9f9;
-    color: #000000;
-}
-
-th, td {
-    border: 1px solid #333333;
-    padding: 10px;
-    text-align: left;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode th {
-    background-color: #333333;
-}
-
-body.light-mode th {
-    background-color: #dddddd;
-}
-
-body.dark-mode tr:nth-child(even) {
-    background-color: #1a1a1a;
-}
-
-body.light-mode tr:nth-child(even) {
-    background-color: #f1f1f1;
-}
-
-/* Formular */
-form {
+/* Modal Style */
+#work-entry-modal {
+    display: none; /* Modal standardmäßig ausgeblendet */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background: var(--bs-secondary-border-subtle);
     padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode form {
-    background-color: #1e1e1e;
-    color: #ffffff;
-}
-
-body.light-mode form {
-    background-color: #f9f9f9;
-    color: #000000;
-}
-
-label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 10px;
-    border: 1px solid #333333;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode button {
-    background-color: #2c2c2c;
-    color: #ffffff;
-}
-
-body.light-mode input,
-body.light-mode select,
-body.light-mode button {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: #bb86fc;
-}
-
-/* Buttons */
-button {
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode button {
-    background-color: #bb86fc;
-    color: #ffffff;
-}
-
-body.light-mode button {
-    background-color: #6200ee;
-    color: #ffffff;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-/* Header */
-h1, h2 {
-    transition: color 0.3s;
-}
-
-body.dark-mode h1,
-body.dark-mode h2 {
-    color: #bb86fc;
-}
-
-body.light-mode h1,
-body.light-mode h2 {
-    color: #6200ee;
-}
-
-/* Scrollbar (optional) */
-body::-webkit-scrollbar {
-    width: 10px;
-}
-
-body::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
 }
 
-body.dark-mode::-webkit-scrollbar-thumb {
-    background-color: #444444;
+/* Hintergrundüberlagerung */
+#modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
 }
 
-body.light-mode::-webkit-scrollbar-thumb {
-    background-color: #cccccc;
+#work-entries-table-header{
+    --bs-table-bg: #5a0041;
+    font-size: large;
+    text-align: center;
+}
+
+#work-entries{
+    text-align: center;
 }
