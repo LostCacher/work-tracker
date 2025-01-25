@@ -87,8 +87,10 @@
             <label for="end_time">Schichtende:</label>
             <input type="datetime-local" id="end_time" name="end_time" class="form-control mb-2" required>
 
-            <button type="button" id="submit-button-add-modal" class="btn btn-success w-100">Speichern</button>
-            <button type="button" id="abort-button-add-modal" class="btn btn-warning w-100">Abbrechen</button>
+            <button type="button" id="submit-button-add-modal"
+                class="btn btn-success w-100 modal-save-button">Speichern</button>
+            <button type="button" id="abort-button-add-modal"
+                class="btn btn-warning w-100 modal-abort-button">Abbrechen</button>
         </form>
     </div>
 
@@ -121,16 +123,19 @@
         <label for="edit-end-time">Schichtende:</label>
         <input type="datetime-local" id="edit-end-time" name="end_time" class="form-control mb-2" required>
 
-        <button type="button" id="save-button-edit-modal" class="btn btn-success w-100">Speichern</button>
-        <button type="button" id="delete-button-edit-modal" class="btn btn-danger w-100">Löschen</button>
-        <button type="button" id="abort-button-edit-modal" class="btn btn-warning w-100">Abbrechen</button>
+        <button type="button" id="save-button-edit-modal"
+            class="btn btn-success w-100 modal-save-button">Speichern</button>
+        <button type="button" id="delete-button-edit-modal"
+            class="btn btn-danger w-100 modal-delete-button">Löschen</button>
+        <button type="button" id="abort-button-edit-modal"
+            class="btn btn-warning w-100 modal-abort-button">Abbrechen</button>
         </form>
     </div>
 
 
 
     <h2>Arbeitseinträge:</h2>
-    <table class="table table-striped table table-hover">
+    <table id="work-entries-table" class="table table-striped table table-hover">
         <thead>
             <tr class="table-secondary" id="work-entries-table-header">
                 <th scope="col" style="display: none;">ID</th>

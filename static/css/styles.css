@@ -72,8 +72,60 @@
     vertical-align: middle;
 }
 
-#shiftColl{
-    color: #000;
+#shiftColl.frühschicht-cell{
     font-weight: bolder;
-    border: 1px solid black;
+    color: #00ff00;
+    text-shadow: none;
+}
+
+#shiftColl.spätschicht-cell{
+    font-weight: bolder;
+    color: #fd7e14;
+    text-shadow: none;
+}
+
+#shiftColl.nachtschicht-cell{
+    font-weight: bolder;
+    color: #ff0000;
+    text-shadow: none;
+}
+
+#shiftColl.werkstatt-cell{
+    font-weight: bolder;
+    color: #0000ff;
+    text-shadow: none;
+}
+
+#shiftColl.berreitschaft-cell{
+    font-weight: bolder;
+    color: #d63384;
+    text-shadow: none;
+}
+
+#shiftColl.lehrgang-cell{
+    font-weight: bolder;
+    color: #0dcaf0;
+    text-shadow: none;
+}
+
+
+#work-entries-table.table-hover{
+    --bs-table-hover-bg: #2e0019;
+}
+
+.modal-save-button{
+    font-weight: bolder;
+    margin-top: 10px;
+    --bs-btn-bg: #008000;
+}
+
+.modal-abort-button{
+    font-weight: bolder;
+    margin-top: 10px;
+    --bs-btn-bg: #cf5d00;
+}
+.modal-delete-button{
+    font-weight: bolder;
+    margin-top: 10px;
+    --bs-btn-bg: #800000;
 }

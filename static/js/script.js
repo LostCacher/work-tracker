@@ -157,25 +157,22 @@ async function loadWorkEntries() {
                 let shiftClass = '';
                 switch (entry.shift) {
                     case 'Frühschicht':
-                        shiftClass = 'table-success';
+                        shiftClass = 'frühschicht-cell';
                         break;
                     case 'Spätschicht':
-                        shiftClass = 'table-warning';
+                        shiftClass = 'spätschicht-cell';
                         break;
                     case 'Nachtschicht':
-                        shiftClass = 'table-danger';
+                        shiftClass = 'nachtschicht-cell';
                         break;
                     case 'Werkstatt':
-                        shiftClass = 'table-info';
+                        shiftClass = 'werkstatt-cell';
                         break;
                     case 'Berreitschaft':
-                        shiftClass = 'table-secondary';
+                        shiftClass = 'berreitschaft-cell';
                         break;
                     case 'Lehrgang':
-                        shiftClass = 'table-primary';
-                        break;
-                    default:
-                        shiftClass = 'table-light';
+                        shiftClass = 'lehrgang-cell';
                         break;
                 }
 
