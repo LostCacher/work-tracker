@@ -1,13 +1,14 @@
 // Button hinzufügen ----------------------------------------------------------------------------------------------------
 
 // Referenzen zum Button, Modal, Hintergrund und Submit-Button
-const addButton = document.getElementById('add-work-time');
+const addButtonAddModal = document.getElementById('add-work-time');
 const modal = document.getElementById('work-entry-modal');
-const backdrop = document.getElementById('modal-backdrop');
-const submitButton = document.getElementById('submit-button');
+const backdrop = document.getElementById('add-modal-backdrop');
+const submitButtonAddModal = document.getElementById('submit-button-add-modal');
+const abortButtonAddModal = document.getElementById('abort-button-add-modal');
 
 // Button-Klick: Modal anzeigen
-addButton.addEventListener('click', () => {
+addButtonAddModal.addEventListener('click', () => {
     modal.style.display = 'block';
     backdrop.style.display = 'block';
 });
@@ -19,8 +20,13 @@ backdrop.addEventListener('click', () => {
 });
 
 // Submit-Button-Klick: Modal schließen
-submitButton.addEventListener('click', () => {
-    // Hier könntest du auch noch eine Überprüfung oder Speicherung einfügen
+submitButtonAddModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    backdrop.style.display = 'none';
+});
+
+// Abbrechen-Button: Modal schließen
+abortButtonAddModal.addEventListener('click', () => {
     modal.style.display = 'none';
     backdrop.style.display = 'none';
 });
@@ -31,9 +37,12 @@ const shiftTimes = {
     "Spätschicht": { start: "13:30", end: "21:30" },
     "Nachtschicht": { start: "21:30", end: "05:30" },
     "Werkstatt": { start: "05:30", end: "13:30" },
-    "Berreitschaft": { start: "00:00", end: "00:00" },
+    "Berreitschaft": { start: "15:00", end: "06:00" },
     "Lehrgang": { start: "08:00", end: "16:00" }
 };
+
+// Datumseingabe überwachen
+document.getElementById('date').addEventListener('input', setDefaultTimes);
 
 function setDefaultTimes() {
     const shift = document.getElementById("shift").value;
@@ -44,7 +53,7 @@ function setDefaultTimes() {
     let formattedStart = `${date}T${startTime}:00`;
 
     // Für Nachtschicht: Datum des Endzeitpunktes um einen Tag erhöhen
-    if (shift === "Nachtschicht") {
+    if (shift === "Nachtschicht" || shift === "Berreitschaft") {
         const startDate = new Date(`${date}T${startTime}:00`);
         const endDate = new Date(startDate); // Kopiere das Startdatum
 
@@ -82,7 +91,7 @@ function calculateWorkingTime(startTime, endTime) {
 window.onload = setDefaultTimes;
 
 // Submit-Funktion: Daten an den Server senden
-document.getElementById("submit-button").addEventListener("click", function () {
+document.getElementById("submit-button-add-modal").addEventListener("click", function () {
     const start_time = document.getElementById("start_time").value;
     const end_time = document.getElementById("end_time").value;
 
@@ -106,7 +115,6 @@ document.getElementById("submit-button").addEventListener("click", function () {
     })
         .then(response => response.json())
         .then(data => {
-            alert(data.message);  // Zeigt die Erfolgsnachricht an
             location.reload();  // Seite neu laden
         })
         .catch(error => {
@@ -136,6 +144,9 @@ async function loadWorkEntries() {
 
         if (response.ok) {
             const entries = await response.json();
+            // Sortiere die Einträge nach ID absteigend
+            entries.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
+
             const tableBody = document.getElementById('work-entries');
             tableBody.innerHTML = ''; // Bestehende Einträge löschen
 
@@ -168,15 +179,18 @@ async function loadWorkEntries() {
                         break;
                 }
 
-                row.classList.add(shiftClass); // CSS-Klasse anwenden
-
                 row.innerHTML = `
-    <td>${entry.id}</td>
+    <td style="display: none;">${entry.id}</td>
+    <td id="shiftColl" class="${shiftClass}">${entry.shift}</td>
     <td>${formatDate(entry.start_time)}</td>
     <td>${formatDate(entry.end_time)}</td>
-    <td>${entry.shift}</td>
     <td>${entry.working_time.toFixed(2)} h</td>
 `;
+
+                // Event für Doppelklick hinzufügen
+                row.addEventListener('dblclick', () => {
+                    openEditModal(entry);
+                });
 
                 tableBody.appendChild(row);
             });
@@ -188,6 +202,93 @@ async function loadWorkEntries() {
     }
 }
 
-// Lade Einträge beim Laden der Seite
+
+// Referenzen zum Modal, Hintergrund, Speichern- und Löschen-Button
+const editModal = document.getElementById('edit-work-entry-modal');
+const editBackdrop = document.getElementById('edit-modal-backdrop');
+const saveButtonEditModal = document.getElementById('save-button-edit-modal');
+const deleteButtonEditModal = document.getElementById('delete-button-edit-modal');
+const abortButtonEditModal = document.getElementById('abort-button-edit-modal');
+
+// Modal zum Bearbeiten öffnen
+function openEditModal(entry) {
+    editModal.style.display = 'block';
+    editBackdrop.style.display = 'block';
+
+    // Klick außerhalb des Modals: Modal schließen
+    editBackdrop.addEventListener('click', () => {
+        editModal.style.display = 'none';
+        editBackdrop.style.display = 'none';
+    });
+
+    // Abbrechen-Button: Modal schließen
+    abortButtonEditModal.addEventListener('click', () => {
+        editModal.style.display = 'none';
+        editBackdrop.style.display = 'none';
+    });
+
+    // Fülle das Modal mit den aktuellen Daten
+    document.getElementById('edit-id').textContent = entry.id;
+    document.getElementById('edit-date').value = entry.date;
+    document.getElementById('edit-shift').value = entry.shift;
+    document.getElementById('edit-start-time').value = entry.start_time;
+    document.getElementById('edit-end-time').value = entry.end_time;
+
+    // Event für Speichern
+    saveButtonEditModal.onclick = () => saveChanges(entry.id);
+
+    // Event für Löschen
+    deleteButtonEditModal.onclick = () => deleteEntry(entry.id);
+}
+
+// Änderungen speichern
+async function saveChanges(id) {
+    const updatedEntry = {
+        id: id,
+        shift: document.getElementById('edit-shift').value,
+        start_time: document.getElementById('edit-start-time').value,
+        end_time: document.getElementById('edit-end-time').value
+    };
+
+    try {
+        const response = await fetch(`/api/work_entries/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedEntry),
+        });
+
+        if (response.ok) {
+            alert('Änderungen erfolgreich gespeichert!');
+            editModal.style.display = 'none';
+            editBackdrop.style.display = 'none';
+            loadWorkEntries(); // Tabelle neu laden
+        } else {
+            console.error('Fehler beim Speichern der Änderungen:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Fehler beim Speichern der Änderungen:', error);
+    }
+}
+
+// Eintrag löschen
+async function deleteEntry(id) {
+    try {
+        const response = await fetch(`/api/work_entries/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            alert('Eintrag erfolgreich gelöscht!');
+            loadWorkEntries(); // Tabelle neu laden
+        } else {
+            console.error('Fehler beim Löschen des Eintrags:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Fehler beim Löschen des Eintrags:', error);
+    }
+}
+
+// Beim Laden der Seite die Arbeitseinträge anzeigen
 document.addEventListener('DOMContentLoaded', loadWorkEntries);
-// Lade SQL Daten Arbeitszeit (ende) ----------------------------------------------------------------------------------------------------

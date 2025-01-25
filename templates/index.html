@@ -64,7 +64,7 @@
     </button>
 
     <!-- Modal -->
-    <div id="modal-backdrop"></div>
+    <div id="add-modal-backdrop"></div>
     <div id="work-entry-modal">
         <h4>Hinzufügen:</h4>
         <form id="work-entry-form">
@@ -87,19 +87,56 @@
             <label for="end_time">Schichtende:</label>
             <input type="datetime-local" id="end_time" name="end_time" class="form-control mb-2" required>
 
-            <button type="button" id="submit-button" class="btn btn-success w-100">Speichern</button>
+            <button type="button" id="submit-button-add-modal" class="btn btn-success w-100">Speichern</button>
+            <button type="button" id="abort-button-add-modal" class="btn btn-warning w-100">Abbrechen</button>
+        </form>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div id="edit-modal-backdrop"></div>
+
+    <!-- Edit Modal -->
+    <div id="edit-work-entry-modal">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4>Eintrag Bearbeiten:</h4>
+            <div>
+                <label>ID:</label>
+                <span id="edit-id"></span> <!-- Anzeige der ID als Text -->
+            </div>
+        </div>
+
+        <label for="edit-shift">Schicht:</label>
+        <select id="edit-shift" name="shift" class="form-control mb-2" onchange="setDefaultTimes()">
+            <option value="Frühschicht">Frühschicht</option>
+            <option value="Spätschicht">Spätschicht</option>
+            <option value="Nachtschicht">Nachtschicht</option>
+            <option value="Werkstatt">Werkstatt</option>
+            <option value="Berreitschaft">Berreitschaft</option>
+            <option value="Lehrgang">Lehrgang</option>
+        </select>
+
+        <label for="edit-start-time">Schichtbeginn:</label>
+        <input type="datetime-local" id="edit-start-time" name="start_time" class="form-control mb-2" required>
+
+        <label for="edit-end-time">Schichtende:</label>
+        <input type="datetime-local" id="edit-end-time" name="end_time" class="form-control mb-2" required>
+
+        <button type="button" id="save-button-edit-modal" class="btn btn-success w-100">Speichern</button>
+        <button type="button" id="delete-button-edit-modal" class="btn btn-danger w-100">Löschen</button>
+        <button type="button" id="abort-button-edit-modal" class="btn btn-warning w-100">Abbrechen</button>
         </form>
     </div>
 
 
-    <h2>Work Entries</h2>
-    <table class="table">
+
+    <h2>Arbeitseinträge:</h2>
+    <table class="table table-striped table table-hover">
         <thead>
             <tr class="table-secondary" id="work-entries-table-header">
-                <th scope="col">ID</th>
+                <th scope="col" style="display: none;">ID</th>
+                <th scope="col">Schicht</th>
                 <th scope="col">Beginn</th>
                 <th scope="col">Ende</th>
-                <th scope="col">Schicht</th>
                 <th scope="col">Arbeitszeit</th>
             </tr>
         </thead>

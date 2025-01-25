@@ -22,8 +22,34 @@
     max-width: 400px;
 }
 
+#edit-work-entry-modal {
+    display: none; /* Modal standardmäßig ausgeblendet */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background: var(--bs-secondary-border-subtle);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+}
+
 /* Hintergrundüberlagerung */
-#modal-backdrop {
+#add-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+}
+
+#edit-modal-backdrop {
     display: none;
     position: fixed;
     top: 0;
@@ -38,8 +64,16 @@
     --bs-table-bg: #5a0041;
     font-size: large;
     text-align: center;
+    vertical-align: middle;
 }
 
 #work-entries{
     text-align: center;
+    vertical-align: middle;
+}
+
+#shiftColl{
+    color: #000;
+    font-weight: bolder;
+    border: 1px solid black;
 }
