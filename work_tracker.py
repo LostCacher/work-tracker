@@ -30,6 +30,9 @@ class WorkEntry(db.Model):
         db.String(16), nullable=False
     )  # Endzeit im Format 'dd.mm.yyyy HH:MM'
     working_time = db.Column(db.Float, nullable=False)  # Arbeitszeit in Stunden
+    working_time_hm = db.Column(
+        db.String(5), nullable=False
+    )  # Arbeitszeit in Stunden und Minuten
 
     def calculate_working_time(self):
         # Berechnung der Arbeitszeit
@@ -63,11 +66,8 @@ def work_entries():
         shift = data["shift"]
         start_time = data["start_time"]  # Startzeit im Format 'yyyy-mm-ddThh:mm'
         end_time = data["end_time"]  # Endzeit im Format 'yyyy-mm-ddThh:mm'
-
-        # Berechnung der Arbeitszeit
-        start = datetime.strptime(start_time, "%Y-%m-%dT%H:%M")  # Passenderes Format
-        end = datetime.strptime(end_time, "%Y-%m-%dT%H:%M")  # Passenderes Format
-        working_time = (end - start).total_seconds() / 3600  # Arbeitszeit in Stunden
+        working_time = data["working_time"]
+        working_time_hm = data["working_time_hm"]
 
         # Neuer WorkEntry
         new_entry = WorkEntry(
@@ -75,6 +75,7 @@ def work_entries():
             start_time=start_time,
             end_time=end_time,
             working_time=working_time,
+            working_time_hm=working_time_hm,
         )
 
         # Speichern des neuen Eintrags
@@ -93,10 +94,36 @@ def work_entries():
                 "start_time": entry.start_time,
                 "end_time": entry.end_time,
                 "working_time": entry.working_time,
+                "working_time_hm": entry.working_time_hm,
             }
             for entry in entries
         ]
     )
+
+
+@app.route("/api/work_entries/<int:id>", methods=["PUT", "DELETE"])
+def manage_work_entry(id):
+    """Bearbeiten (PUT) oder Löschen (DELETE) eines Work-Eintrags."""
+    entry = db.session.get(WorkEntry, id)
+
+    if not entry:
+        return jsonify({"error": "Work entry not found"}), 404
+
+    if request.method == "DELETE":
+        db.session.delete(entry)
+        db.session.commit()
+        return jsonify({"message": "Work entry deleted successfully!"}), 200
+
+    if request.method == "PUT":
+        data = request.get_json()
+        entry.shift = data["shift"]
+        entry.start_time = data["start_time"]
+        entry.end_time = data["end_time"]
+        entry.working_time = data["working_time"]
+        entry.working_time_hm = data["working_time_hm"]
+
+        db.session.commit()
+        return jsonify({"message": "Work entry updated successfully!"}), 200
 
 
 @app.route("/api/vacations", methods=["GET", "POST"])
