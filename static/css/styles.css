@@ -1,3 +1,16 @@
+.header-title {
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.offcanvas-header {
+    background-color: var(--bs-primary);
+}
+
+.offcanvas-title {
+    font-weight: bold;
+}
+
 /* Button unten rechts */
 #add-work-time {
     position: fixed;

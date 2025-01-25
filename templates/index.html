@@ -21,28 +21,47 @@
 <body>
     <!--//SECTION - Navbar-->
     <header>
-        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
-            <div class="container-fluid">
-                <label class="navbar-brand" href="#">Übersicht</label>
-                <div class="collapse navbar-collapse" id="navbarColor03">
-                    <ul class="navbar-nav me-auto">
+        <nav class="navbar bg-body" data-bs-theme="light">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <!-- Unsichtbarer Platzhalter für korrekte Zentrierung -->
+                <div class="d-none d-lg-block" style="width: 48px;"></div>
+
+                <!-- Seitenüberschrift zentriert -->
+                <h1 class="text-center mx-auto text-light header-title">Arbeitseinträge</h1>
+
+                <!-- Offcanvas Toggler Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <!-- Offcanvas Navbar -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg"
+                aria-labelledby="navbarOffcanvasLgLabel">
+                <div class="offcanvas-header">
+                    <h5 id="navbarOffcanvasLgLabel" class="offcanvas-title text-light">Menü:</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Home
-                                <span class="visually-hidden">(current)</span>
-                            </a>
+                            <a class="nav-link active text-light" href="#">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
+                            <a class="nav-link text-light" href="#">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
+                            <a class="nav-link text-light" href="#">Pricing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
+                            <a class="nav-link text-light" href="#">About</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                                aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#"
+                                role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#">Action</a>
                                 <a class="dropdown-item" href="#">Another action</a>
@@ -52,24 +71,13 @@
                             </div>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
                 </div>
             </div>
         </nav>
     </header>
     <!--//!SECTION - Navbar-->
 
-    <!--//SECTION - Button (Hinzufügen)-->
-    <button type="button" id="add-work-time" class="btn btn-primary btn-lg">
-        <i class="bi bi-plus-circle"></i>
-    </button>
-    <!--//!SECTION - Button (Hinzufügen)-->
-
     <!--//SECTION - Arbeitseinträge-->
-    <h2>Arbeitseinträge:</h2>
     <table id="work-entries-table" class="table table-striped table table-hover">
         <thead>
             <tr class="table-secondary" id="work-entries-table-header">
@@ -83,6 +91,12 @@
         <tbody id="work-entries"></tbody>
     </table>
     <!--//!SECTION - Arbeitseinträge-->
+
+    <!--//SECTION - Button (Hinzufügen)-->
+    <button type="button" id="add-work-time" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle"></i>
+    </button>
+    <!--//!SECTION - Button (Hinzufügen)-->
 
     <!--//SECTION - Modal (Hinzufügen)-->
     <div id="add-modal-backdrop"></div>
