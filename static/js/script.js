@@ -30,6 +30,7 @@ addButtonAddModal.addEventListener('click', () => toggleModal(modal, backdrop, t
 // Modal schließen
 backdrop.addEventListener('click', () => toggleModal(modal, backdrop, false));
 abortButtonAddModal.addEventListener('click', () => toggleModal(modal, backdrop, false));
+
 submitButtonAddModal.addEventListener('click', async () => {
     const shift = document.getElementById('shift').value;
     const start_time = document.getElementById('start_time').value;
@@ -37,6 +38,11 @@ submitButtonAddModal.addEventListener('click', async () => {
 
     // Berechnung der Arbeitszeit
     const { totalHours, hoursAndMinutes } = calculateWorkingTime(start_time, end_time);
+
+    // Jahr und Monat aus start_time extrahieren
+    const startDate = new Date(start_time);
+    const selectedYear = startDate.getFullYear();  // Extrahiert das Jahr
+    const selectedMonth = startDate.getMonth() + 1;  // Extrahiert den Monat (0-basiert, daher +1)
 
     // API-Aufruf
     try {
@@ -54,8 +60,8 @@ submitButtonAddModal.addEventListener('click', async () => {
 
         if (response.ok) {
             toggleModal(modal, backdrop, false); // Schließt das Modal
-            loadWorkEntries(); // Lädt die aktualisierte Tabelle
-            location.reload();
+            loadWorkEntries(selectedYear, selectedMonth); // Hier übergeben wir das spezifische Jahr und den Monat
+            await loadAvailableYearsAndMonths(); // Aktualisiert die Dropdowns mit dem Jahr und Monat
         } else {
             console.error('Fehler beim Hinzufügen:', await response.text());
         }
@@ -63,6 +69,7 @@ submitButtonAddModal.addEventListener('click', async () => {
         console.error('Fehler:', error);
     }
 });
+
 
 // Bearbeitungsmodal
 function openEditModal(entry) {
@@ -82,20 +89,22 @@ function fillEditModal(entry) {
 editBackdrop.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
 abortButtonEditModal.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
 
-saveButtonEditModal.addEventListener('click', () => {
+saveButtonEditModal.addEventListener('click', async () => {
     const confirmed = window.confirm("Möchten Sie die Änderungen wirklich speichern?");
     if (confirmed) {
-        saveChanges(currentEntryId); // Speichert die Änderungen, wenn bestätigt
+        await saveChanges(currentEntryId); // Speichert die Änderungen
+        loadWorkEntries(); // Aktualisiert die Tabelle dynamisch
+        await loadAvailableYearsAndMonths(); // Aktualisiert die Dropdowns
     }
-    location.reload();
 });
 
-deleteButtonEditModal.addEventListener('click', () => {
+deleteButtonEditModal.addEventListener('click', async () => {
     const confirmed = window.confirm("Möchten Sie diesen Eintrag wirklich löschen?");
     if (confirmed) {
-        deleteEntry(currentEntryId); // Löscht den Eintrag, wenn bestätigt
+        await deleteEntry(currentEntryId); // Löscht den Eintrag
+        loadWorkEntries(); // Aktualisiert die Tabelle dynamisch
+        await loadAvailableYearsAndMonths(); // Aktualisiert die Dropdowns
     }
-    location.reload();
 });
 
 function toggleModal(modal, backdrop, show) {
@@ -168,13 +177,19 @@ async function loadAvailableYearsAndMonths() {
             return monthNames[month - 1];  // Monat ist 1-basiert, daher -1
         };
 
-        // Überprüfen, ob es Jahre gibt und das Standardjahr setzen
-        const selectedYear = yearFilter.value || data.years[0];
-        yearFilter.value = selectedYear;
+        // Aktuelles Jahr und Monat
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth() + 1; // Monat ist 0-basiert, daher +1
+        const currentMonthFormatted = currentMonth.toString().padStart(2, '0');
+
+        // Wenn kein Jahr übergeben wurde, wähle das aktuelle Jahr
+        let yearToSelect = (data.years.includes(currentYear.toString()) ? currentYear : data.years[0]);
+        yearFilter.value = yearToSelect;
 
         // Dropdown für Monate leeren und nur verfügbare Monate für das ausgewählte Jahr hinzufügen
         monthFilter.innerHTML = "";
-        const availableMonths = data.months[selectedYear] || [];
+        const availableMonths = data.months[yearToSelect] || [];
         availableMonths.forEach(month => {
             const monthName = getMonthName(month); // Monatsnamen direkt hier erhalten
             const option = document.createElement("option");
@@ -183,17 +198,18 @@ async function loadAvailableYearsAndMonths() {
             monthFilter.appendChild(option);
         });
 
-        // Setze den Standardmonat auf den ersten verfügbaren Monat
-        const selectedMonth = monthFilter.value || availableMonths[0];
-        monthFilter.value = selectedMonth;
+        // Wenn kein Monat übergeben wurde, wähle den aktuellen Monat oder den neuesten verfügbaren Monat
+        let monthToSelect = availableMonths.includes(currentMonthFormatted) ? currentMonthFormatted : availableMonths[availableMonths.length - 1];
+        monthFilter.value = monthToSelect;
 
         // Lade die WorkEntries mit dem Standardjahr und -monat
-        loadWorkEntries(selectedYear, selectedMonth);
+        loadWorkEntries(yearToSelect, monthToSelect);
 
     } catch (error) {
         console.error("Error loading available years and months:", error);
     }
 }
+
 
 // Lade die WorkEntries basierend auf Jahr und Monat
 async function loadWorkEntries(year = null, month = null) {
@@ -270,12 +286,10 @@ async function saveChanges(id) {
         end_time: document.getElementById('edit-end-time').value
     };
 
-    // Berechnung der neuen Arbeitszeit
     const { totalHours, hoursAndMinutes } = calculateWorkingTime(updatedEntry.start_time, updatedEntry.end_time);
     updatedEntry.working_time = totalHours;
     updatedEntry.working_time_hm = hoursAndMinutes;
 
-    // API-Aufruf zum Speichern der Änderungen
     try {
         const response = await fetch(`/api/work_entries/${id}`, {
             method: 'PUT',
@@ -284,8 +298,7 @@ async function saveChanges(id) {
         });
 
         if (response.ok) {
-            toggleModal(editModal, editBackdrop, false); // Modal schließen
-            loadWorkEntries(); // Tabelle neu laden
+            toggleModal(editModal, editBackdrop, false);
         } else {
             console.error('Fehler beim Speichern:', await response.text());
         }
@@ -299,8 +312,7 @@ async function deleteEntry(id) {
         const response = await fetch(`/api/work_entries/${id}`, { method: 'DELETE' });
 
         if (response.ok) {
-            toggleModal(editModal, editBackdrop, false); // Modal schließen
-            loadWorkEntries(); // Tabelle neu laden
+            toggleModal(editModal, editBackdrop, false);
         } else {
             console.error('Fehler beim Löschen:', await response.text());
         }

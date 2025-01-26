@@ -1,5 +1,4 @@
 import os
-from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
@@ -20,26 +19,11 @@ db = SQLAlchemy(app)
 # Datenbankmodelle definieren
 class WorkEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    shift = db.Column(
-        db.String(50), nullable=False
-    )  # Schicht: Frühschicht, Spätschicht, etc.
-    start_time = db.Column(
-        db.String(16), nullable=False
-    )  # Startzeit im Format 'dd.mm.yyyy HH:MM'
-    end_time = db.Column(
-        db.String(16), nullable=False
-    )  # Endzeit im Format 'dd.mm.yyyy HH:MM'
-    working_time = db.Column(db.Float, nullable=False)  # Arbeitszeit in Stunden
-    working_time_hm = db.Column(
-        db.String(5), nullable=False
-    )  # Arbeitszeit in Stunden und Minuten
-
-
-class Vacation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.String(10), nullable=False)
-    end_date = db.Column(db.String(10), nullable=False)
-    description = db.Column(db.String(100), nullable=True)
+    shift = db.Column(db.String(50), nullable=False)
+    start_time = db.Column(db.String(16), nullable=False, index=True)
+    end_time = db.Column(db.String(16), nullable=False)
+    working_time = db.Column(db.Float, nullable=False)
+    working_time_hm = db.Column(db.String(5), nullable=False)
 
 
 # Routen definieren
@@ -49,53 +33,26 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/api/work_entries", methods=["GET", "POST"])
-def work_entries():
-    """Verarbeitet Work-Einträge (GET & POST)."""
-    if request.method == "POST":
-        # POST: Neuen Eintrag hinzufügen
-        data = request.get_json()
-
-        # Holen der Daten
-        shift = data["shift"]
-        start_time = data["start_time"]  # Startzeit im Format 'yyyy-mm-ddThh:mm'
-        end_time = data["end_time"]  # Endzeit im Format 'yyyy-mm-ddThh:mm'
-        working_time = data["working_time"]
-        working_time_hm = data["working_time_hm"]
-
-        # Neuer WorkEntry
-        new_entry = WorkEntry(
-            shift=shift,
-            start_time=start_time,
-            end_time=end_time,
-            working_time=working_time,
-            working_time_hm=working_time_hm,
-        )
-
-        # Speichern des neuen Eintrags
-        db.session.add(new_entry)
-        db.session.commit()
-
-        return jsonify({"message": "Work entry added successfully!"}), 201
-
-    # GET: Alle Einträge mit optionaler Filterung nach Jahr und Monat
+@app.route("/api/work_entries", methods=["GET"])
+def get_work_entries():
+    """Gibt gefilterte und sortierte Work-Einträge zurück."""
     year = request.args.get("year", type=int)
     month = request.args.get("month", type=int)
+    sort_order = request.args.get("sort", default="desc", type=str)
 
-    # SQLAlchemy-Abfrage starten
     query = WorkEntry.query
-
     if year:
         query = query.filter(db.func.strftime("%Y", WorkEntry.start_time) == str(year))
     if month:
         query = query.filter(
             db.func.strftime("%m", WorkEntry.start_time) == f"{month:02}"
         )
+    if sort_order == "asc":
+        query = query.order_by(WorkEntry.end_time.asc())
+    else:
+        query = query.order_by(WorkEntry.end_time.desc())
 
-    # Abfrage ausführen
     entries = query.all()
-
-    # Ergebnis zurückgeben
     return jsonify(
         [
             {
@@ -114,8 +71,6 @@ def work_entries():
 @app.route("/api/available_years_and_months", methods=["GET"])
 def available_years_and_months():
     """Gibt die verfügbaren Jahre und Monate für Work-Einträge zurück."""
-
-    # Alle Jahre aus der Datenbank abfragen
     years_query = db.session.query(
         db.func.strftime("%Y", WorkEntry.start_time)
     ).distinct()
@@ -127,9 +82,7 @@ def available_years_and_months():
     years = [year[0] for year in years_query]
     months_by_year = {}
 
-    # Monate für jedes Jahr gruppieren
     for year in years:
-        # Verwende direkt db.func.strftime in der Filterbedingung
         months = [
             month[1]
             for month in months_query.filter(
@@ -141,11 +94,32 @@ def available_years_and_months():
     return jsonify({"years": years, "months": months_by_year})
 
 
+@app.route("/api/work_entries", methods=["POST"])
+def add_work_entry():
+    """Erstellt einen neuen Work-Eintrag."""
+    data = request.get_json()
+    try:
+        new_entry = WorkEntry(
+            shift=data["shift"],
+            start_time=data["start_time"],
+            end_time=data["end_time"],
+            working_time=data["working_time"],
+            working_time_hm=data["working_time_hm"],
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+        return (
+            jsonify({"message": "Work entry added successfully!", "id": new_entry.id}),
+            201,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @app.route("/api/work_entries/<int:id>", methods=["PUT", "DELETE"])
 def manage_work_entry(id):
     """Bearbeiten (PUT) oder Löschen (DELETE) eines Work-Eintrags."""
     entry = db.session.get(WorkEntry, id)
-
     if not entry:
         return jsonify({"error": "Work entry not found"}), 404
 
@@ -161,42 +135,11 @@ def manage_work_entry(id):
         entry.end_time = data["end_time"]
         entry.working_time = data["working_time"]
         entry.working_time_hm = data["working_time_hm"]
-
         db.session.commit()
         return jsonify({"message": "Work entry updated successfully!"}), 200
 
 
-@app.route("/api/vacations", methods=["GET", "POST"])
-def vacations():
-    """Verarbeitet Urlaubsdaten (GET & POST)."""
-    if request.method == "POST":
-        # POST: Neuen Urlaub hinzufügen
-        data = request.get_json()
-        new_vacation = Vacation(
-            start_date=data["start_date"],
-            end_date=data["end_date"],
-            description=data.get("description", ""),
-        )
-        db.session.add(new_vacation)
-        db.session.commit()
-        return jsonify({"message": "Vacation added successfully!"}), 201
-
-    # GET: Alle Urlaube abrufen
-    vacations = Vacation.query.all()
-    return jsonify(
-        [
-            {
-                "id": vacation.id,
-                "start_date": vacation.start_date,
-                "end_date": vacation.end_date,
-                "description": vacation.description,
-            }
-            for vacation in vacations
-        ]
-    )
-
-
-# Datenbanktabellen erstellen
+# Tabellen erstellen
 def create_tables():
     """Erstellt die Tabellen in der Datenbank, falls sie nicht existieren."""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
