@@ -11,6 +11,11 @@
     font-weight: bold;
 }
 
+.filter-section .form-select {
+    width: auto;
+    display: inline-block;
+}
+
 /* Button unten rechts */
 #add-work-time {
     position: fixed;
@@ -85,37 +90,37 @@
     vertical-align: middle;
 }
 
-#shiftColl.frühschicht-cell{
+.shiftColl.frühschicht-cell{
     font-weight: bolder;
     color: #00ff00;
     text-shadow: none;
 }
 
-#shiftColl.spätschicht-cell{
+.shiftColl.spätschicht-cell{
     font-weight: bolder;
     color: #fd7e14;
     text-shadow: none;
 }
 
-#shiftColl.nachtschicht-cell{
+.shiftColl.nachtschicht-cell{
     font-weight: bolder;
     color: #ff0000;
     text-shadow: none;
 }
 
-#shiftColl.werkstatt-cell{
+.shiftColl.werkstatt-cell{
     font-weight: bolder;
     color: #0000ff;
     text-shadow: none;
 }
 
-#shiftColl.berreitschaft-cell{
+.shiftColl.berreitschaft-cell{
     font-weight: bolder;
     color: #d63384;
     text-shadow: none;
 }
 
-#shiftColl.lehrgang-cell{
+.shiftColl.lehrgang-cell{
     font-weight: bolder;
     color: #0dcaf0;
     text-shadow: none;

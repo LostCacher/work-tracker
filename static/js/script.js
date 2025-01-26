@@ -138,17 +138,27 @@ function calculateWorkingTime(startTime, endTime) {
 //!SECTION -  Automatische Zeitvorgabe
 
 //SECTION -  Einträge laden und anzeigen
-async function loadWorkEntries() {
+async function loadWorkEntries(year = null, month = null) {
+    // Hole das aktuelle Jahr und den aktuellen Monat, falls nicht gesetzt
+    const currentDate = new Date();
+    const filterYear = year || currentDate.getFullYear();
+    const filterMonth = month || currentDate.getMonth() + 1;
+
     try {
-        const response = await fetch('/api/work_entries');
-        if (!response.ok) throw new Error('Failed to load entries');
+        const response = await fetch(`/api/work_entries?year=${filterYear}&month=${filterMonth}`);
+        if (!response.ok) throw new Error("Failed to load entries");
 
         const entries = await response.json();
         renderEntries(entries);
+
+        // Filterwerte in die Dropdowns eintragen
+        document.getElementById("yearFilter").value = filterYear;
+        document.getElementById("monthFilter").value = filterMonth;
     } catch (error) {
-        console.error('Error loading entries:', error);
+        console.error("Error loading entries:", error);
     }
 }
+
 
 function renderEntries(entries) {
     const tableBody = document.getElementById('work-entries');
@@ -160,7 +170,7 @@ function renderEntries(entries) {
         row.className = getShiftClass(entry.shift);
         row.innerHTML = `
             <td style="display: none;">${entry.id}</td>
-            <td id="shiftColl" class=${getShiftClass(entry.shift)}>${entry.shift}</td>
+            <td class="shiftColl ${getShiftClass(entry.shift)}">${entry.shift}</td>
             <td>${formatDate(entry.start_time)}</td>
             <td>${formatDate(entry.end_time)}</td>
             <td>${entry.working_time.toFixed(2)} h | ${entry.working_time_hm}</td>
@@ -242,5 +252,23 @@ async function deleteEntry(id) {
 }
 //!SECTION -  Änderungen speichern oder löschen
 
+//SECTION - Tabellenfilter Arbeitseintäge
+const yearFilter = document.getElementById("yearFilter");
+const monthFilter = document.getElementById("monthFilter");
+
+function applyFilter() {
+    const year = yearFilter.value;
+    const month = monthFilter.value;
+
+    loadWorkEntries(year, month);
+}
+
+// Event-Listener für die Dropdowns
+yearFilter.addEventListener("change", applyFilter);
+monthFilter.addEventListener("change", applyFilter);
+//!SECTION - Tabellenfilter Arbeitseintäge
+
 //Initialisierung
-document.addEventListener('DOMContentLoaded', loadWorkEntries);
+document.addEventListener("DOMContentLoaded", () => {
+    loadWorkEntries();
+});

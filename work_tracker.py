@@ -34,12 +34,6 @@ class WorkEntry(db.Model):
         db.String(5), nullable=False
     )  # Arbeitszeit in Stunden und Minuten
 
-    def calculate_working_time(self):
-        # Berechnung der Arbeitszeit
-        start = datetime.strptime(self.start_time, "%d.%m.%Y %H:%M")
-        end = datetime.strptime(self.end_time, "%d.%m.%Y %H:%M")
-        self.working_time = (end - start).total_seconds() / 3600  # Stunden
-
 
 class Vacation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -84,8 +78,24 @@ def work_entries():
 
         return jsonify({"message": "Work entry added successfully!"}), 201
 
-    # GET: Alle Einträge abrufen
-    entries = WorkEntry.query.all()
+    # GET: Alle Einträge mit optionaler Filterung nach Jahr und Monat
+    year = request.args.get("year", type=int)
+    month = request.args.get("month", type=int)
+
+    # SQLAlchemy-Abfrage starten
+    query = WorkEntry.query
+
+    if year:
+        query = query.filter(db.func.strftime("%Y", WorkEntry.start_time) == str(year))
+    if month:
+        query = query.filter(
+            db.func.strftime("%m", WorkEntry.start_time) == f"{month:02}"
+        )
+
+    # Abfrage ausführen
+    entries = query.all()
+
+    # Ergebnis zurückgeben
     return jsonify(
         [
             {
