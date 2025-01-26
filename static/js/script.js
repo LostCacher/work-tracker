@@ -159,6 +159,29 @@ async function loadWorkEntries(year = null, month = null) {
     }
 }
 
+// Neue Funktion, um Jahre und Monate dynamisch zu laden
+async function loadAvailableYears() {
+    try {
+        const response = await fetch("/api/available_years");
+        if (!response.ok) throw new Error("Failed to load available years");
+
+        const data = await response.json();
+        const yearFilter = document.getElementById("yearFilter");
+
+        // Dropdown für Jahre leeren und nur verfügbare Jahre hinzufügen
+        yearFilter.innerHTML = "";
+        data.years.forEach(year => {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Error loading available years:", error);
+    }
+}
+
 
 function renderEntries(entries) {
     const tableBody = document.getElementById('work-entries');
@@ -257,10 +280,9 @@ const yearFilter = document.getElementById("yearFilter");
 const monthFilter = document.getElementById("monthFilter");
 
 function applyFilter() {
-    const year = yearFilter.value;
-    const month = monthFilter.value;
-
-    loadWorkEntries(year, month);
+    const selectedYear = yearFilter.value;
+    const selectedMonth = monthFilter.value;
+    loadWorkEntries(selectedYear, selectedMonth);
 }
 
 // Event-Listener für die Dropdowns
@@ -270,5 +292,6 @@ monthFilter.addEventListener("change", applyFilter);
 
 //Initialisierung
 document.addEventListener("DOMContentLoaded", () => {
+    loadAvailableYears();
     loadWorkEntries();
 });

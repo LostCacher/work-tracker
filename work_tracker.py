@@ -111,6 +111,20 @@ def work_entries():
     )
 
 
+@app.route("/api/available_years", methods=["GET"])
+def available_years():
+    """Gibt die verfügbaren Jahre für Work-Einträge zurück."""
+
+    # Alle Jahre aus der Datenbank abfragen
+    years_query = db.session.query(
+        db.func.strftime("%Y", WorkEntry.start_time)
+    ).distinct()
+
+    years = [year[0] for year in years_query]
+
+    return jsonify({"years": years})
+
+
 @app.route("/api/work_entries/<int:id>", methods=["PUT", "DELETE"])
 def manage_work_entry(id):
     """Bearbeiten (PUT) oder Löschen (DELETE) eines Work-Eintrags."""
