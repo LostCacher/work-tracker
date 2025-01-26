@@ -145,7 +145,7 @@ function calculateWorkingTime(startTime, endTime) {
 //!SECTION -  Automatische Zeitvorgabe
 
 //SECTION -  Einträge laden und anzeigen
-async function loadAvailableYearsAndMonths(selectedYear = null, selectedMonth = null) {
+async function loadAvailableYearsAndMonths() {
     try {
         const response = await fetch("/api/available_years_and_months");
         if (!response.ok) throw new Error("Failed to load available years and months");
@@ -179,7 +179,7 @@ async function loadAvailableYearsAndMonths(selectedYear = null, selectedMonth = 
         const currentMonthFormatted = currentMonth.toString().padStart(2, '0');
 
         // Wenn kein Jahr übergeben wurde, wähle das aktuelle Jahr
-        let yearToSelect = selectedYear || (data.years.includes(currentYear.toString()) ? currentYear : data.years[0]);
+        let yearToSelect = data.years.includes(currentYear.toString()) ? currentYear : data.years[0];
         yearFilter.value = yearToSelect;
 
         // Dropdown für Monate leeren und nur verfügbare Monate für das ausgewählte Jahr hinzufügen
@@ -194,7 +194,7 @@ async function loadAvailableYearsAndMonths(selectedYear = null, selectedMonth = 
         });
 
         // Wenn kein Monat übergeben wurde, wähle den aktuellen Monat oder den neuesten verfügbaren Monat
-        let monthToSelect = selectedMonth || availableMonths.includes(currentMonthFormatted) ? currentMonthFormatted : availableMonths[availableMonths.length - 1];
+        let monthToSelect = availableMonths.includes(currentMonthFormatted) ? currentMonthFormatted : availableMonths[availableMonths.length - 1];
         monthFilter.value = monthToSelect;
 
         // Lade die WorkEntries mit dem Standardjahr und -monat
