@@ -55,6 +55,7 @@ submitButtonAddModal.addEventListener('click', async () => {
         if (response.ok) {
             toggleModal(modal, backdrop, false); // Schließt das Modal
             loadWorkEntries(); // Lädt die aktualisierte Tabelle
+            location.reload();
         } else {
             console.error('Fehler beim Hinzufügen:', await response.text());
         }
@@ -86,6 +87,7 @@ saveButtonEditModal.addEventListener('click', () => {
     if (confirmed) {
         saveChanges(currentEntryId); // Speichert die Änderungen, wenn bestätigt
     }
+    location.reload();
 });
 
 deleteButtonEditModal.addEventListener('click', () => {
@@ -93,6 +95,7 @@ deleteButtonEditModal.addEventListener('click', () => {
     if (confirmed) {
         deleteEntry(currentEntryId); // Löscht den Eintrag, wenn bestätigt
     }
+    location.reload();
 });
 
 function toggleModal(modal, backdrop, show) {
@@ -138,6 +141,61 @@ function calculateWorkingTime(startTime, endTime) {
 //!SECTION -  Automatische Zeitvorgabe
 
 //SECTION -  Einträge laden und anzeigen
+async function loadAvailableYearsAndMonths() {
+    try {
+        const response = await fetch("/api/available_years_and_months");
+        if (!response.ok) throw new Error("Failed to load available years and months");
+
+        const data = await response.json();
+        const yearFilter = document.getElementById("yearFilter");
+        const monthFilter = document.getElementById("monthFilter");
+
+        // Dropdown für Jahre leeren und nur verfügbare Jahre hinzufügen
+        yearFilter.innerHTML = "";
+        data.years.forEach(year => {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+
+        // Funktion zum Abrufen des Monatsnamens
+        const getMonthName = (month) => {
+            const monthNames = [
+                "Januar", "Februar", "März", "April", "Mai", "Juni",
+                "Juli", "August", "September", "Oktober", "November", "Dezember"
+            ];
+            return monthNames[month - 1];  // Monat ist 1-basiert, daher -1
+        };
+
+        // Überprüfen, ob es Jahre gibt und das Standardjahr setzen
+        const selectedYear = yearFilter.value || data.years[0];
+        yearFilter.value = selectedYear;
+
+        // Dropdown für Monate leeren und nur verfügbare Monate für das ausgewählte Jahr hinzufügen
+        monthFilter.innerHTML = "";
+        const availableMonths = data.months[selectedYear] || [];
+        availableMonths.forEach(month => {
+            const monthName = getMonthName(month); // Monatsnamen direkt hier erhalten
+            const option = document.createElement("option");
+            option.value = month;
+            option.textContent = monthName;
+            monthFilter.appendChild(option);
+        });
+
+        // Setze den Standardmonat auf den ersten verfügbaren Monat
+        const selectedMonth = monthFilter.value || availableMonths[0];
+        monthFilter.value = selectedMonth;
+
+        // Lade die WorkEntries mit dem Standardjahr und -monat
+        loadWorkEntries(selectedYear, selectedMonth);
+
+    } catch (error) {
+        console.error("Error loading available years and months:", error);
+    }
+}
+
+// Lade die WorkEntries basierend auf Jahr und Monat
 async function loadWorkEntries(year = null, month = null) {
     // Hole das aktuelle Jahr und den aktuellen Monat, falls nicht gesetzt
     const currentDate = new Date();
@@ -156,29 +214,6 @@ async function loadWorkEntries(year = null, month = null) {
         document.getElementById("monthFilter").value = filterMonth;
     } catch (error) {
         console.error("Error loading entries:", error);
-    }
-}
-
-// Neue Funktion, um Jahre und Monate dynamisch zu laden
-async function loadAvailableYears() {
-    try {
-        const response = await fetch("/api/available_years");
-        if (!response.ok) throw new Error("Failed to load available years");
-
-        const data = await response.json();
-        const yearFilter = document.getElementById("yearFilter");
-
-        // Dropdown für Jahre leeren und nur verfügbare Jahre hinzufügen
-        yearFilter.innerHTML = "";
-        data.years.forEach(year => {
-            const option = document.createElement("option");
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        });
-
-    } catch (error) {
-        console.error("Error loading available years:", error);
     }
 }
 
@@ -286,12 +321,55 @@ function applyFilter() {
 }
 
 // Event-Listener für die Dropdowns
-yearFilter.addEventListener("change", applyFilter);
+yearFilter.addEventListener("change", () => {
+    updateMonthsForSelectedYear();
+    applyFilter();
+});
+
 monthFilter.addEventListener("change", applyFilter);
+
+function updateMonthsForSelectedYear() {
+    const selectedYear = yearFilter.value;
+
+    // Abrufen der verfügbaren Monate für das ausgewählte Jahr
+    fetch("/api/available_years_and_months")
+        .then((response) => response.json())
+        .then((data) => {
+            const availableMonths = data.months[selectedYear] || [];
+            const getMonthName = (month) => {
+                const monthNames = [
+                    "Januar", "Februar", "März", "April", "Mai", "Juni",
+                    "Juli", "August", "September", "Oktober", "November", "Dezember"
+                ];
+                return monthNames[month - 1];
+            };
+
+            // Aktualisieren des Monats-Dropdowns
+            monthFilter.innerHTML = "";
+            availableMonths.forEach((month) => {
+                const monthName = getMonthName(month);
+                const option = document.createElement("option");
+                option.value = month;
+                option.textContent = monthName;
+                monthFilter.appendChild(option);
+            });
+
+            // Wähle den ersten verfügbaren Monat aus
+            if (availableMonths.length > 0) {
+                monthFilter.value = availableMonths[0];
+            }
+
+            // Aktualisiere die Work-Entries basierend auf Jahr und Monat
+            applyFilter();
+        })
+        .catch((error) => {
+            console.error("Fehler beim Aktualisieren der Monate:", error);
+        });
+}
 //!SECTION - Tabellenfilter Arbeitseintäge
 
 //Initialisierung
 document.addEventListener("DOMContentLoaded", () => {
-    loadAvailableYears();
+    loadAvailableYearsAndMonths();
     loadWorkEntries();
 });

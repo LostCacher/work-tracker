@@ -111,18 +111,34 @@ def work_entries():
     )
 
 
-@app.route("/api/available_years", methods=["GET"])
-def available_years():
-    """Gibt die verfügbaren Jahre für Work-Einträge zurück."""
+@app.route("/api/available_years_and_months", methods=["GET"])
+def available_years_and_months():
+    """Gibt die verfügbaren Jahre und Monate für Work-Einträge zurück."""
 
     # Alle Jahre aus der Datenbank abfragen
     years_query = db.session.query(
         db.func.strftime("%Y", WorkEntry.start_time)
     ).distinct()
+    months_query = db.session.query(
+        db.func.strftime("%Y", WorkEntry.start_time).label("year"),
+        db.func.strftime("%m", WorkEntry.start_time).label("month"),
+    ).distinct()
 
     years = [year[0] for year in years_query]
+    months_by_year = {}
 
-    return jsonify({"years": years})
+    # Monate für jedes Jahr gruppieren
+    for year in years:
+        # Verwende direkt db.func.strftime in der Filterbedingung
+        months = [
+            month[1]
+            for month in months_query.filter(
+                db.func.strftime("%Y", WorkEntry.start_time) == year
+            )
+        ]
+        months_by_year[year] = months
+
+    return jsonify({"years": years, "months": months_by_year})
 
 
 @app.route("/api/work_entries/<int:id>", methods=["PUT", "DELETE"])
