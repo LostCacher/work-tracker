@@ -28,7 +28,7 @@ class WorkEntry(db.Model):
 
 # Routen definieren
 @app.route("/")
-def home():
+def index():
     """Lädt die Startseite."""
     return render_template("index.html")
 
@@ -152,4 +152,4 @@ create_tables()
 
 # App starten
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="10.0.0.5", port=5000, debug=True)
