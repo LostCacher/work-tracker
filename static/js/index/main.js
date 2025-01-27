@@ -1,16 +1,14 @@
 //SECTION - IMPORTS
-import { log, getMonthName } from './helper.js';
+import { log, getMonthName, getShiftClass } from './helper.js';
 // import {  } from './modals.js';
 // import {  } from './api.js';
 //!SECTION - IMPORTS
 
 
-//SECTION - Initialisierung
-loadWorkEntries();
-//!SECTION - Initialisierung
-
-
 //SECTION - FUNCTION: loadWorkEntries
+loadWorkEntries(); // Inizialisierung
+let work_entries = [];
+
 const yearSelect = document.getElementById('yearFilter');
 const monthSelect = document.getElementById('monthFilter');
 
@@ -90,13 +88,9 @@ async function loadWorkEntries(year = null, month = null) {
         const responseEntries = await fetch(`/api/work_entries?year=${yearToSelect}&month=${monthToSelect}`);
         if (!responseEntries.ok) throw new Error("Failed to load work entries");
 
-        const workEntries = await responseEntries.json();
+        work_entries = await responseEntries.json();
 
-        // Loggen der erhaltenen Daten
-        log(workEntries, 'info');
-
-        // Hier kann die Kalenderfunktion aufgerufen werden, falls erforderlich
-        // generateCalendar(yearToSelect, monthToSelect, workEntries);
+        generateCalendar(yearToSelect, monthToSelect)
 
     } catch (error) {
         // Fehler protokollieren
@@ -106,60 +100,62 @@ async function loadWorkEntries(year = null, month = null) {
 //!SECTION - FUNCTION: loadWorkEntries
 
 
+//SECTION - FUNCTION: Generate Calendar
+function generateCalendar(year, month) {
+    const calendarGrid = document.getElementById('calendar-grid');
+    calendarGrid.innerHTML = ''; // Kalender-Grid leeren
 
-// const calendarGrid = document.getElementById('calendar-grid');
-// let workEntries = [];  // Diese Arbeitseinträge werden später durch eine API oder Datenbankabfrage geladen
+    // Erstelle das Datum für den ersten Tag des Monats
+    const firstDayOfMonth = new Date(year, month - 1, 1);
+    const lastDayOfMonth = new Date(year, month, 0);
+    const daysInMonth = lastDayOfMonth.getDate();
 
-// // Kalender für das angegebene Jahr und Monat erstellen
-// export function generateCalendar(year, month) {
-//     // Leere das Kalender-Grid
-//     calendarGrid.innerHTML = '';
+    // Berechne die Wochentage für den ersten Tag des Monats
+    let firstDayOfWeek = firstDayOfMonth.getDay();
+    firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Montag als erster Wochentag
 
-//     // Erstelle das Datum für den ersten Tag des Monats
-//     const firstDayOfMonth = new Date(year, month - 1, 1);
-//     const lastDayOfMonth = new Date(year, month, 0);
-//     const daysInMonth = lastDayOfMonth.getDate();
+    // Leere Felder für die Tage vor dem Monatsanfang
+    for (let i = 0; i < firstDayOfWeek; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('calendar-cell');
+        calendarGrid.appendChild(emptyCell);
+    }
 
-//     // Berechne die Wochentage für den ersten Tag des Monats (Montag als ersten Tag)
-//     let firstDayOfWeek = firstDayOfMonth.getDay();
-//     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;  // Sonntag (0) zu Samstag (6) und verschiebt den Start der Woche auf Montag
+    // Tage im Monat erzeugen
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('calendar-cell');
+        dayCell.textContent = day;
 
-//     // Erstelle die leeren Felder bis zum ersten Tag des Monats
-//     for (let i = 0; i < firstDayOfWeek; i++) {
-//         const emptyCell = document.createElement('div');
-//         emptyCell.classList.add('calendar-cell');
-//         calendarGrid.appendChild(emptyCell);
-//     }
-
-//     // Erstelle die Zellen für die Tage im Monat
-//     for (let day = 1; day <= daysInMonth; day++) {
-//         const dayCell = document.createElement('div');
-//         dayCell.classList.add('calendar-cell');
-//         dayCell.textContent = day;
-
-//         // Filtere die Arbeitseinträge für diesen Tag
-//         const dayEntries = workEntries.filter(entry => {
-//             const entryDate = new Date(entry.date);
-//             return entryDate.getDate() === day && entryDate.getMonth() === month - 1 && entryDate.getFullYear() === year;
-//         });
-
-//         // Zeige Arbeitseinträge an
-//         if (dayEntries.length > 0) {
-//             dayCell.classList.add('has-work-entry');
-//             const entryList = document.createElement('ul');
-//             dayEntries.forEach(entry => {
-//                 const listItem = document.createElement('li');
-//                 listItem.textContent = `${entry.shift}: ${entry.start_time} - ${entry.end_time}`;
-//                 entryList.appendChild(listItem);
-//             });
-//             dayCell.appendChild(entryList);
-//         }
-
-//         calendarGrid.appendChild(dayCell);
-//     }
-// }
+        // Arbeitseinträge für diesen Tag filtern
+        const dayEntries = work_entries.filter(entry => {
+            const entryDate = new Date(entry.start_time);
+            return entryDate.getDate() === day && entryDate.getMonth() === month - 1 && entryDate.getFullYear() === parseInt(year, 10);
+        });
 
 
-// Initiale Kalenderansicht anzeigen (mit aktuellem Jahr und Monat)
-// const currentDate = new Date();
-// generateCalendar(currentDate.getFullYear(), currentDate.getMonth() + 1);
+        // Arbeitseinträge anzeigen
+        if (dayEntries.length > 0) {
+            // Zuerst die allgemeine Klasse für Arbeitseinträge hinzufügen
+            dayCell.classList.add('has-work-entry');
+
+            // Die Klasse für den Shift hinzufügen (für den Tag selbst)
+            dayEntries.forEach(entry => {
+                dayCell.classList.add(getShiftClass(entry.shift));
+            });
+
+            const entryList = document.createElement('ul');
+
+            dayEntries.forEach(entry => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${entry.shift}: ${entry.working_time}h | ${entry.working_time_hm}`;
+                entryList.appendChild(listItem);
+            });
+
+            dayCell.appendChild(entryList);
+        }
+
+        calendarGrid.appendChild(dayCell);
+    }
+}
+//!SECTION - FUNCTION: Generate Calendar

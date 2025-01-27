@@ -95,39 +95,39 @@
     vertical-align: middle;
 }
 
-.shiftColl.frühschicht-cell{
+.calendar-cell.has-work-entry.frühschicht-cell{
     font-weight: bolder;
-    color: #00ff00;
+    background-color: #006900;
     text-shadow: none;
 }
 
-.shiftColl.spätschicht-cell{
+.calendar-cell.has-work-entry.spätschicht-cell{
     font-weight: bolder;
-    color: #fd7e14;
+    background-color: #fd7e14;
     text-shadow: none;
 }
 
-.shiftColl.nachtschicht-cell{
+.calendar-cell.has-work-entry.nachtschicht-cell{
     font-weight: bolder;
-    color: #ff0000;
+    background-color: #ff0000;
     text-shadow: none;
 }
 
-.shiftColl.werkstatt-cell{
+.calendar-cell.has-work-entry.werkstatt-cell{
     font-weight: bolder;
-    color: #0000ff;
+    background-color: #0000ff;
     text-shadow: none;
 }
 
-.shiftColl.berreitschaft-cell{
+.calendar-cell.has-work-entry.berreitschaft-cell{
     font-weight: bolder;
-    color: #d63384;
+    background-color: #d63384;
     text-shadow: none;
 }
 
-.shiftColl.lehrgang-cell{
+.calendar-cell.has-work-entry.lehrgang-cell{
     font-weight: bolder;
-    color: #0dcaf0;
+    background-color: #0dcaf0;
     text-shadow: none;
 }
 
@@ -171,10 +171,6 @@
     background-color: #5a0041;
     border-radius: 5px;
     min-height: 60px;
-}
-
-.calendar-cell.has-work-entry {
-    background-color: #c8e6c9;
 }
 
 .calendar-cell ul {

@@ -26,3 +26,17 @@ export function getMonthName(month) {
     return monthNames[month - 1];
 };
 //!SECTION - Monatsname
+
+//SECTION - Schicht Classe for background
+export function getShiftClass(shift) {
+    const shiftClasses = {
+        'Frühschicht': 'frühschicht-cell',
+        'Spätschicht': 'spätschicht-cell',
+        'Nachtschicht': 'nachtschicht-cell',
+        'Werkstatt': 'werkstatt-cell',
+        'Berreitschaft': 'berreitschaft-cell',
+        'Lehrgang': 'lehrgang-cell'
+    };
+    return shiftClasses[shift] || '';
+}
+//!SECTION - Schicht Classe for background

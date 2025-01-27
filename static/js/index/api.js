@@ -2,6 +2,9 @@
 import { log, getMonthName } from './helper.js';
 //!SECTION - IMPORTS
 
+
+
+
 //FIXME - OLD muss noch angepasst werden
 // //SECTION - Einträge laden und anzeigen
 // function renderEntries(entries) {
@@ -22,18 +25,6 @@ import { log, getMonthName } from './helper.js';
 //         row.addEventListener('dblclick', () => openEditModal(entry));
 //         tableBody.appendChild(row);
 //     });
-// }
-
-// function getShiftClass(shift) {
-//     const shiftClasses = {
-//         'Frühschicht': 'frühschicht-cell',
-//         'Spätschicht': 'spätschicht-cell',
-//         'Nachtschicht': 'nachtschicht-cell',
-//         'Werkstatt': 'werkstatt-cell',
-//         'Berreitschaft': 'berreitschaft-cell',
-//         'Lehrgang': 'lehrgang-cell'
-//     };
-//     return shiftClasses[shift] || '';
 // }
 
 // function formatDate(dateString) {
