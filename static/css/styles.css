@@ -1,3 +1,4 @@
+/*SECTION - Header */
 .trennlinie{
     margin-top: 0;
     margin-bottom: 0;
@@ -15,23 +16,19 @@
 .offcanvas-title {
     font-weight: bold;
 }
+/*!SECTION - Header */
 
+/*SECTION - Filter Form */
 .filter-section .form-select {
     width: auto;
     display: inline-block;
 }
+/*!SECTION - Filter Form */
 
-/* Button unten rechts */
-#add-work-time {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
 
-/* Modal Style */
+/*SECTION - Hinzufügen Modal */
 #work-entry-modal {
-    display: none; /* Modal standardmäßig ausgeblendet */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -45,22 +42,6 @@
     max-width: 400px;
 }
 
-#edit-work-entry-modal {
-    display: none; /* Modal standardmäßig ausgeblendet */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1050;
-    background: var(--bs-secondary-border-subtle);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
-}
-
-/* Hintergrundüberlagerung */
 #add-modal-backdrop {
     display: none;
     position: fixed;
@@ -70,6 +51,23 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1040;
+}
+/*!SECTION - Hinzufügen Modal */
+
+/*SECTION - Bearbeiten Modal */
+#edit-work-entry-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background: var(--bs-secondary-border-subtle);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
 }
 
 #edit-modal-backdrop {
@@ -82,58 +80,14 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 1040;
 }
+/*!SECTION - Bearbeiten Modal */
 
-#work-entries-table-header{
-    --bs-table-bg: #5a0041;
-    font-size: large;
-    text-align: center;
-    vertical-align: middle;
-}
-
-#work-entries{
-    text-align: center;
-    vertical-align: middle;
-}
-
-.calendar-cell.has-work-entry.frühschicht-cell{
-    font-weight: bolder;
-    background-color: #006900;
-    text-shadow: none;
-}
-
-.calendar-cell.has-work-entry.spätschicht-cell{
-    font-weight: bolder;
-    background-color: #fd7e14;
-    text-shadow: none;
-}
-
-.calendar-cell.has-work-entry.nachtschicht-cell{
-    font-weight: bolder;
-    background-color: #ff0000;
-    text-shadow: none;
-}
-
-.calendar-cell.has-work-entry.werkstatt-cell{
-    font-weight: bolder;
-    background-color: #0000ff;
-    text-shadow: none;
-}
-
-.calendar-cell.has-work-entry.berreitschaft-cell{
-    font-weight: bolder;
-    background-color: #d63384;
-    text-shadow: none;
-}
-
-.calendar-cell.has-work-entry.lehrgang-cell{
-    font-weight: bolder;
-    background-color: #0dcaf0;
-    text-shadow: none;
-}
-
-
-#work-entries-table.table-hover{
-    --bs-table-hover-bg: #2e0019;
+/*SECTION - Buttons */
+#add-work-time {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
 .modal-save-button{
@@ -152,8 +106,9 @@
     margin-top: 10px;
     --bs-btn-bg: #800000;
 }
+/*!SECTION - Buttons */
 
-
+/*SECTION - Calendar */
 .calendar-container {
     padding: 20px;
 }
@@ -178,3 +133,40 @@
     padding: 0;
     font-size: 12px;
 }
+
+.frühschicht-cell{
+    font-weight: bolder;
+    background-color: #006900;
+    text-shadow: none;
+}
+
+.spätschicht-cell{
+    font-weight: bolder;
+    background-color: #fd7e14;
+    text-shadow: none;
+}
+
+.nachtschicht-cell{
+    font-weight: bolder;
+    background-color: #ff0000;
+    text-shadow: none;
+}
+
+.werkstatt-cell{
+    font-weight: bolder;
+    background-color: #0000ff;
+    text-shadow: none;
+}
+
+.berreitschaft-cell{
+    font-weight: bolder;
+    background-color: #d63384;
+    text-shadow: none;
+}
+
+.lehrgang-cell{
+    font-weight: bolder;
+    background-color: #0dcaf0;
+    text-shadow: none;
+}
+/*!SECTION - Calendar */
