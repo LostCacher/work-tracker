@@ -53,7 +53,7 @@ def get_work_entries():
         query = query.order_by(WorkEntry.end_time.desc())
 
     entries = query.all()
-    return jsonify(
+    response = jsonify(
         [
             {
                 "id": entry.id,
@@ -66,6 +66,9 @@ def get_work_entries():
             for entry in entries
         ]
     )
+    # Setze den Content-Type Header auf 'application/json; charset=utf-8'
+    response.headers["Content-Type"] = "application/json; charset=UTF-8"
+    return response
 
 
 @app.route("/api/available_years_and_months", methods=["GET"])
@@ -91,7 +94,10 @@ def available_years_and_months():
         ]
         months_by_year[year] = months
 
-    return jsonify({"years": years, "months": months_by_year})
+    response = jsonify({"years": years, "months": months_by_year})
+    # Setze den Content-Type Header auf 'application/json; charset=utf-8'
+    response.headers["Content-Type"] = "application/json; charset=UTF-8"
+    return response
 
 
 @app.route("/api/work_entries", methods=["POST"])

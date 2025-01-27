@@ -1,10 +1,10 @@
 /*SECTION - Header */
-.trennlinie{
+.header__trennlinie{
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.header-title {
+.header__title {
     margin: 0;
     text-transform: uppercase;
 }
@@ -26,8 +26,8 @@
 /*!SECTION - Filter Form */
 
 
-/*SECTION - Hinzufügen Modal */
-#work-entry-modal {
+/*SECTION - Modals */
+.modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -42,7 +42,7 @@
     max-width: 400px;
 }
 
-#add-modal-backdrop {
+.modal__backdrop {
     display: none;
     position: fixed;
     top: 0;
@@ -52,56 +52,28 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 1040;
 }
-/*!SECTION - Hinzufügen Modal */
-
-/*SECTION - Bearbeiten Modal */
-#edit-work-entry-modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1050;
-    background: var(--bs-secondary-border-subtle);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
-}
-
-#edit-modal-backdrop {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1040;
-}
-/*!SECTION - Bearbeiten Modal */
+/*!SECTION - Modals */
 
 /*SECTION - Buttons */
-#add-work-time {
+.add-modal__button--open {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
 }
 
-.modal-save-button{
+.modal__button--save{
     font-weight: bolder;
     margin-top: 10px;
     --bs-btn-bg: #008000;
 }
 
-.modal-abort-button{
+.modal__button--abort{
     font-weight: bolder;
     margin-top: 10px;
     --bs-btn-bg: #cf5d00;
 }
-.modal-delete-button{
+.modal__button--delete{
     font-weight: bolder;
     margin-top: 10px;
     --bs-btn-bg: #800000;
@@ -109,62 +81,62 @@
 /*!SECTION - Buttons */
 
 /*SECTION - Calendar */
-.calendar-container {
+.calendar__container {
     padding: 20px;
 }
 
-.calendar-grid {
+.calendar__grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     text-align: center;
 }
 
-.calendar-cell {
+.calendar__cell {
     padding: 10px;
-    border: 1px solid #85005f;
+    border: 3px solid #85005f;
     background-color: #5a0041;
     border-radius: 5px;
     min-height: 60px;
 }
 
-.calendar-cell ul {
+.calendar__cell ul {
     list-style-type: none;
     padding: 0;
     font-size: 12px;
 }
 
-.frühschicht-cell{
+.calendar__cell--frühschicht{
     font-weight: bolder;
     background-color: #006900;
     text-shadow: none;
 }
 
-.spätschicht-cell{
+.calendar__cell--spätschicht{
     font-weight: bolder;
     background-color: #fd7e14;
     text-shadow: none;
 }
 
-.nachtschicht-cell{
+.calendar__cell--nachtschicht{
     font-weight: bolder;
     background-color: #ff0000;
     text-shadow: none;
 }
 
-.werkstatt-cell{
+.calendar__cell--werkstatt{
     font-weight: bolder;
     background-color: #0000ff;
     text-shadow: none;
 }
 
-.berreitschaft-cell{
+.calendar__cell--berreitschaft{
     font-weight: bolder;
     background-color: #d63384;
     text-shadow: none;
 }
 
-.lehrgang-cell{
+.calendar__cell--lehrgang{
     font-weight: bolder;
     background-color: #0dcaf0;
     text-shadow: none;

@@ -117,14 +117,14 @@ function generateCalendar(year, month) {
     // Leere Felder für die Tage vor dem Monatsanfang
     for (let i = 0; i < firstDayOfWeek; i++) {
         const emptyCell = document.createElement('div');
-        emptyCell.classList.add('calendar-cell');
+        emptyCell.classList.add('calendar__cell');
         calendarGrid.appendChild(emptyCell);
     }
 
     // Tage im Monat erzeugen
     for (let day = 1; day <= daysInMonth; day++) {
         const dayCell = document.createElement('div');
-        dayCell.classList.add('calendar-cell');
+        dayCell.classList.add('calendar__cell');
         dayCell.textContent = day;
 
         // Arbeitseinträge für diesen Tag filtern
@@ -136,10 +136,6 @@ function generateCalendar(year, month) {
 
         // Arbeitseinträge anzeigen
         if (dayEntries.length > 0) {
-            // Zuerst die allgemeine Klasse für Arbeitseinträge hinzufügen
-            dayCell.classList.add('has-work-entry');
-
-            // Die Klasse für den Shift hinzufügen (für den Tag selbst)
             dayEntries.forEach(entry => {
                 dayCell.classList.add(getShiftClass(entry.shift));
             });

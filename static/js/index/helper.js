@@ -30,12 +30,12 @@ export function getMonthName(month) {
 //SECTION - Schicht Classe for background
 export function getShiftClass(shift) {
     const shiftClasses = {
-        'Frühschicht': 'frühschicht-cell',
-        'Spätschicht': 'spätschicht-cell',
-        'Nachtschicht': 'nachtschicht-cell',
-        'Werkstatt': 'werkstatt-cell',
-        'Berreitschaft': 'berreitschaft-cell',
-        'Lehrgang': 'lehrgang-cell'
+        'Frühschicht': 'calendar__cell--frühschicht',
+        'Spätschicht': 'calendar__cell--spätschicht',
+        'Nachtschicht': 'calendar__cell--nachtschicht',
+        'Werkstatt': 'calendar__cell--werkstatt',
+        'Berreitschaft': 'calendar__cell--berreitschaft',
+        'Lehrgang': 'calendar__cell--lehrgang'
     };
     return shiftClasses[shift] || '';
 }
