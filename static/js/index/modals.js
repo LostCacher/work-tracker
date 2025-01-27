@@ -20,17 +20,6 @@ import { log } from './helper.js';
 // //!SECTION - Referenzen für Buttons und Modals
 
 
-// //SECTION - Standardzeiten für Schichten
-// const shiftTimes = {
-//     "Frühschicht": { start: "05:30", end: "13:30" },
-//     "Spätschicht": { start: "13:30", end: "21:30" },
-//     "Nachtschicht": { start: "21:30", end: "05:30" },
-//     "Werkstatt": { start: "05:30", end: "13:30" },
-//     "Berreitschaft": { start: "15:00", end: "06:00" },
-//     "Lehrgang": { start: "08:00", end: "16:00" }
-// };
-// //!SECTION - Standardzeiten für Schichten
-
 // //SECTION - Automatische Zeitvorgabe
 // document.getElementById('date').addEventListener('input', setDefaultTimes);
 

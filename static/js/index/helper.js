@@ -9,7 +9,7 @@ export function log(message, level = 'info') {
     } else {
         // Debugging ist deaktiviert und die Nachricht wurde noch nicht ausgegeben
         if (!hasLoggedProductionMessage) {
-            console.info('Die Anwendung läuft im Produktionsmodus. -> Alle logs sind ausgeschaltet');
+            console.info('Die Anwendung läuft im "Produktions-Modus" -> Alle logs sind ausgeschaltet !!!');
             hasLoggedProductionMessage = true;  // Nachricht nur einmal ausgeben
         }
     }
@@ -30,13 +30,27 @@ export function getMonthName(month) {
 //SECTION - Schicht Classe for background
 export function getShiftClass(shift) {
     const shiftClasses = {
-        'Frühschicht': 'calendar__cell--frühschicht',
-        'Spätschicht': 'calendar__cell--spätschicht',
-        'Nachtschicht': 'calendar__cell--nachtschicht',
-        'Werkstatt': 'calendar__cell--werkstatt',
-        'Berreitschaft': 'calendar__cell--berreitschaft',
-        'Lehrgang': 'calendar__cell--lehrgang'
+        'Frühschicht': 'calendar__entry--frühschicht',
+        'Spätschicht': 'calendar__entry--spätschicht',
+        'Nachtschicht': 'calendar__entry--nachtschicht',
+        'Werkstatt': 'calendar__entry--werkstatt',
+        'Berreitschaft': 'calendar__entry--berreitschaft',
+        'Lehrgang': 'calendar__entry--lehrgang'
     };
     return shiftClasses[shift] || '';
 }
 //!SECTION - Schicht Classe for background
+
+//SECTION - Standardzeiten für Schichten
+export function getShiftTime(shift) {
+    const shiftTimes = {
+        "Frühschicht": { start: "05:30", end: "13:30" },
+        "Spätschicht": { start: "13:30", end: "21:30" },
+        "Nachtschicht": { start: "21:30", end: "05:30" },
+        "Werkstatt": { start: "05:30", end: "13:30" },
+        "Berreitschaft": { start: "15:00", end: "06:00" },
+        "Lehrgang": { start: "08:00", end: "16:00" }
+    };
+    return shiftTimes[shift] || '';
+}
+//!SECTION - Standardzeiten für Schichten

@@ -93,52 +93,50 @@
 }
 
 .calendar__cell {
-    padding: 10px;
+    position: relative;
+    padding: 2px;
     border: 3px solid #85005f;
     background-color: #5a0041;
     border-radius: 5px;
     min-height: 60px;
+    display: flex;
+    flex-direction: column; /* Stapele die Einträge vertikal */
+    justify-content: flex-start;
 }
 
-.calendar__cell ul {
-    list-style-type: none;
-    padding: 0;
+/* Karte für jede Schicht */
+.calendar__entry {
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 5px;
     font-size: 12px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
 }
 
-.calendar__cell--frühschicht{
-    font-weight: bolder;
+/* Schichtstile */
+.calendar__entry--frühschicht {
     background-color: #006900;
-    text-shadow: none;
 }
 
-.calendar__cell--spätschicht{
-    font-weight: bolder;
+.calendar__entry--spätschicht {
     background-color: #fd7e14;
-    text-shadow: none;
 }
 
-.calendar__cell--nachtschicht{
-    font-weight: bolder;
+.calendar__entry--nachtschicht {
     background-color: #ff0000;
-    text-shadow: none;
 }
 
-.calendar__cell--werkstatt{
-    font-weight: bolder;
+.calendar__entry--werkstatt {
     background-color: #0000ff;
-    text-shadow: none;
 }
 
-.calendar__cell--berreitschaft{
-    font-weight: bolder;
+.calendar__entry--berreitschaft {
     background-color: #d63384;
-    text-shadow: none;
 }
 
-.calendar__cell--lehrgang{
-    font-weight: bolder;
+.calendar__entry--lehrgang {
     background-color: #0dcaf0;
-    text-shadow: none;
 }
 /*!SECTION - Calendar */
