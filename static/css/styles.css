@@ -1,42 +1,12 @@
 /* SECTION - Bootstrap Override */
-:root,
-[data-bs-theme=light] {
-    --bs-light-rgb: 68, 217, 232;
+/* .btn-success {
+    --bs-btn-bg: #008000;
 }
 
-[data-bs-theme=dark] {
-  color-scheme: dark;
-  /* --bs-light-rgb: 255, 0, 0; */
-}
+.btn-warning {
+    --bs-btn-bg: #cf5d00;
+} */
 /* !SECTION - Bootstrap Override */
-
-
-/* SECTION - Header */
-.header__trennlinie{
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.header__title {
-    margin: 0;
-    text-transform: uppercase;
-}
-
-.offcanvas-header {
-    background-color: var(--bs-primary);
-}
-
-.offcanvas-title {
-    font-weight: bold;
-}
-/*!SECTION - Header */
-
-/*SECTION - Filter Form */
-.filter-section .form-select {
-    width: auto;
-    display: inline-block;
-}
-/*!SECTION - Filter Form */
 
 
 /* SECTION - Modals */
@@ -55,7 +25,7 @@
     max-width: 400px;
 } */
 
-.modal__backdrop {
+/* .modal__backdrop {
     display: none;
     position: fixed;
     top: 0;
@@ -64,23 +34,10 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1040;
-}
+} */
 /*!SECTION - Modals */
 
 /*SECTION - Buttons */
-.add-modal__button--open {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.modal__button--save{
-    font-weight: bolder;
-    margin-top: 10px;
-    --bs-btn-bg: #008000;
-}
-
 .modal__button--abort{
     font-weight: bolder;
     margin-top: 10px;

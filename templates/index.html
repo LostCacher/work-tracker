@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-bs-theme="light">
+<html lang="de" data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
                 <div class="d-none d-lg-block" style="width: 48px;"></div>
 
                 <!-- Seitenüberschrift zentriert -->
-                <h1 class="text-center mx-auto text-light header__title">Arbeitseinträge</h1>
+                <h1 class="text-center mx-auto text-light text-uppercase">Arbeitseinträge</h1>
 
                 <!-- Offcanvas Toggler Button -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
@@ -39,8 +39,8 @@
             <!-- Offcanvas Navbar -->
             <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg"
                 aria-labelledby="navbarOffcanvasLgLabel">
-                <div class="offcanvas-header">
-                    <h5 id="navbarOffcanvasLgLabel" class="offcanvas-title text-light">Menü:</h5>
+                <div class="offcanvas-header bg-primary">
+                    <h5 id="navbarOffcanvasLgLabel" class="offcanvas-title text-light fw-bolder">Menü:</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                         aria-label="Close Navbar"></button>
                 </div>
@@ -74,21 +74,24 @@
             </div>
         </nav>
 
-        <hr class="header__trennlinie">
+        <hr class="mt-0 mb-3">
     </header>
     <!--//!SECTION - Navbar-->
 
     <!--//SECTION - Filter Jahr / Monat-->
-    <div class="filter-section text-center py-3">
-        <div class="d-inline-block mx-2">
-            <label for="yearFilter" class="form-label text-light">Jahr:</label>
-            <select id="yearFilter" class="form-select"></select>
-        </div>
-        <div class="d-inline-block mx-2">
-            <label for="monthFilter" class="form-label text-light">Monat:</label>
-            <select id="monthFilter" class="form-select">
+    <div class="d-flex justify-content-center mx-auto">
+        <div class="text-center">
+            <!-- Jahr-Filter -->
+            <div class="d-inline-flex align-items-center mx-2 gap-2">
+                <label for="yearFilter" class="form-label m-0">Jahr:</label>
+                <select id="yearFilter" class="form-select m-0"></select>
+            </div>
 
-            </select>
+            <!-- Monat-Filter -->
+            <div class="d-inline-flex align-items-center mx-2 gap-2">
+                <label for="monthFilter" class="form-label m-0">Monat:</label>
+                <select id="monthFilter" class="form-select m-0"></select>
+            </div>
         </div>
     </div>
     <!--//!SECTION - Filter Jahr / Monat-->
@@ -103,65 +106,59 @@
 
 
     <!--//SECTION - Modal (Hinzufügen)-->
+    <button type="button" class="btn btn-primary btn-lg position-absolute bottom-0 end-0 m-3" data-bs-toggle="modal"
+        data-bs-target="#modal__add" aria-label="Add work time">
+        <i class="bi bi-plus-circle"></i>
+    </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Work Entry Modal -->
+    <div class="modal fade" id="modal__add" tabindex="-1" aria-labelledby="modal__add--title">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content bg-dark">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="modal__add--title">Hinzufügen:</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <form>
+                        <div class="mb-3">
+                            <label for="modal__add--date" class="form-label">Datum:</label>
+                            <input type="date" id="modal__add--date" name="date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__add--shift" class="form-label">Schicht:</label>
+                            <select id="modal__add--shift" name="shift" class="form-select">
+                                <option value="Frühschicht">Frühschicht</option>
+                                <option value="Spätschicht">Spätschicht</option>
+                                <option value="Nachtschicht">Nachtschicht</option>
+                                <option value="Werkstatt">Werkstatt</option>
+                                <option value="Berreitschaft">Berreitschaft</option>
+                                <option value="Lehrgang">Lehrgang</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__add--start-time" class="form-label">Schichtbeginn:</label>
+                            <input type="datetime-local" id="modal__add--start-time" name="start_time"
+                                class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__add--end-time" class="form-label">Schichtende:</label>
+                            <input type="datetime-local" id="modal__add--end-time" name="end_time" class="form-control"
+                                required>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" id="modal__add--save-button" class="btn btn-success">Speichern</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Button trigger modal -->
-    <button type="button" id="add-work-time" class="btn btn-primary btn-lg add-modal__button--open"
-        data-bs-toggle="modal" data-bs-target="#work-entry-modal" aria-label="Add work time">
-        <i class="bi bi-plus-circle"></i>
-    </button>
-
-    <div id="add-modal-backdrop" class="modal__backdrop"></div>
-    <div id="work-entry-modal" class="modal fade">
-        <h4>Hinzufügen:</h4>
-        <form id="work-entry-form">
-            <label for="date">Datum:</label>
-            <input type="date" id="date" name="date" class="form-control mb-2" required>
-
-            <label for="shift">Schicht:</label>
-            <select id="shift" name="shift" class="form-control mb-2" onchange="setDefaultTimes()">
-                <option value="Frühschicht">Frühschicht</option>
-                <option value="Spätschicht">Spätschicht</option>
-                <option value="Nachtschicht">Nachtschicht</option>
-                <option value="Werkstatt">Werkstatt</option>
-                <option value="Berreitschaft">Berreitschaft</option>
-                <option value="Lehrgang">Lehrgang</option>
-            </select>
-
-            <label for="start_time">Schichtbeginn:</label>
-            <input type="datetime-local" id="start_time" name="start_time" class="form-control mb-2" required>
-
-            <label for="end_time">Schichtende:</label>
-            <input type="datetime-local" id="end_time" name="end_time" class="form-control mb-2" required>
-
-            <button type="button" id="submit-button-add-modal"
-                class="btn btn-success w-100 modal__button--save">Speichern</button>
-            <button type="button" id="abort-button-add-modal"
-                class="btn btn-warning w-100 modal__button--abort">Abbrechen</button>
-        </form>
-    </div>
     <!--//!SECTION - Modal (Hinzufügen)-->
 
     <!--//SECTION - Modal (Bearbeiten)-->
-    <div id="edit-modal-backdrop" class="modal__backdrop"></div>
+    <!-- <div id="edit-modal-backdrop" class="modal__backdrop"></div>
     <div id="edit-work-entry-modal" class="modal">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h4>Eintrag bearbeiten:</h4>
@@ -194,7 +191,7 @@
         <button type="button" id="abort-button-edit-modal"
             class="btn btn-warning w-100 modal__button--abort">Abbrechen</button>
         </form>
-    </div>
+    </div> -->
     <!--//!SECTION - Modal (Bearbeiten)-->
 
     <!--//SECTION - JavaScript einbinden-->

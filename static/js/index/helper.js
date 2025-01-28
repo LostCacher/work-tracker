@@ -66,19 +66,14 @@ const shiftTimes = {
 };
 
 //SECTION - Automatische Zeitvorgabe
-document.getElementById('date').addEventListener('input', setDefaultTimes);
-
-function setDefaultTimes() {
-    const shift = document.getElementById("shift").value;
-    const date = document.getElementById("date").value;
+export function setDefaultTimes(shift, date) {
     const startTime = shiftTimes[shift].start;
     const isDayTomorrow = shift === "Nachtschicht" || shift === "Berreitschaft";
-
     const formattedStart = `${date}T${startTime}:00`;
     const formattedEnd = formatEndTime(date, shiftTimes[shift].end, isDayTomorrow);
 
-    document.getElementById("start_time").value = formattedStart;
-    document.getElementById("end_time").value = formattedEnd;
+    document.getElementById("modal__add--start-time").value = formattedStart;
+    document.getElementById("modal__add--end-time").value = formattedEnd;
 }
 
 function formatEndTime(date, endTime, isDayTomorrow) {
@@ -90,16 +85,16 @@ function formatEndTime(date, endTime, isDayTomorrow) {
     return `${date}T${endTime}:00`;
 }
 
-function calculateWorkingTime(startTime, endTime) {
-    const diff = new Date(endTime) - new Date(startTime);
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.round((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return {
-        totalHours: (diff / (1000 * 60 * 60)).toFixed(2),
-        hoursAndMinutes: `${hours}h ${minutes}m`
-    };
-}
+// function calculateWorkingTime(startTime, endTime) {
+//     const diff = new Date(endTime) - new Date(startTime);
+//     const hours = Math.floor(diff / (1000 * 60 * 60));
+//     const minutes = Math.round((diff % (1000 * 60 * 60)) / (1000 * 60));
+//     return {
+//         totalHours: (diff / (1000 * 60 * 60)).toFixed(2),
+//         hoursAndMinutes: `${hours}h ${minutes}m`
+//     };
+// }
 
 // Berechnung der Arbeitszeit
-const { totalHours, hoursAndMinutes } = calculateWorkingTime(start_time, end_time);
+// const { totalHours, hoursAndMinutes } = calculateWorkingTime(start_time, end_time);
 //!SECTION - Automatische Zeitvorgabe
