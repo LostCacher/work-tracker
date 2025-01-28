@@ -6,19 +6,30 @@ import { loadWorkEntries } from './render.js';
 //!SECTION - IMPORTS
 
 
-//SECTION - FUNCTION: loadWorkEntries
+//SECTION - Inizialisierung
 log('Die Anwendung läuft im "Develop-Modus" -> Alle logs sind eingeschaltet:');
-loadWorkEntries(); // Inizialisierung
+loadWorkEntries();
+//!SECTION - Inizialisierung
 
+
+//SECTION - Event Listener
+
+//SECTION - Filter Change
 const yearSelect = document.getElementById('yearFilter');
 const monthSelect = document.getElementById('monthFilter');
 
-//ANCHOR - Event-Listener-Filter-Change-Year
-yearSelect.addEventListener('change', function () {
-    loadWorkEntries(parseInt(yearSelect.value), parseInt(monthSelect.value));
+[yearSelect, monthSelect].forEach(select => {
+    select.addEventListener('change', function () {
+        loadWorkEntries(parseInt(yearSelect.value), parseInt(monthSelect.value));
+    });
 });
+//!SECTION - Filter Change
 
-//ANCHOR - Event-Listener-Filter-Change-Month
-monthSelect.addEventListener('change', function () {
-    loadWorkEntries(parseInt(yearSelect.value), parseInt(monthSelect.value));
-});
+
+// addButtonAddModal.addEventListener('click', () => toggleModal(addModal, addBackdrop, true));
+// addBackdrop.addEventListener('click', () => toggleModal(addModal, addBackdrop, false));
+// abortButtonAddModal.addEventListener('click', () => toggleModal(addModal, addBackdrop, false));
+// editBackdrop.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
+// abortButtonEditModal.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
+// row.addEventListener('dblclick', () => openEditModal(entry));
+//!SECTION - Event Listener

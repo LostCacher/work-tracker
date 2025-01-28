@@ -1,5 +1,5 @@
 //SECTION - IMPORTS
-import { log } from './helper.js';
+import { log, getShiftTime } from './helper.js';
 //!SECTION - IMPORTS
 
 // //SECTION - Referenzen
@@ -20,55 +20,16 @@ import { log } from './helper.js';
 // //!SECTION - Referenzen für Buttons und Modals
 
 
-// //SECTION - Automatische Zeitvorgabe
-// document.getElementById('date').addEventListener('input', setDefaultTimes);
+//SECTION - Funktionen für Modals
 
-// function setDefaultTimes() {
-//     const shift = document.getElementById("shift").value;
-//     const date = document.getElementById("date").value;
-//     const startTime = shiftTimes[shift].start;
-//     const isDayTomorrow = shift === "Nachtschicht" || shift === "Berreitschaft";
 
-//     const formattedStart = `${date}T${startTime}:00`;
-//     const formattedEnd = formatEndTime(date, shiftTimes[shift].end, isDayTomorrow);
 
-//     document.getElementById("start_time").value = formattedStart;
-//     document.getElementById("end_time").value = formattedEnd;
-// }
-
-// function formatEndTime(date, endTime, isDayTomorrow) {
-//     if (isDayTomorrow) {
-//         const startDate = new Date(`${date}T${endTime}:00`);
-//         startDate.setDate(startDate.getDate() + 1);
-//         return `${startDate.toISOString().split('T')[0]}T${endTime}:00`;
-//     }
-//     return `${date}T${endTime}:00`;
-// }
-
-// function calculateWorkingTime(startTime, endTime) {
-//     const diff = new Date(endTime) - new Date(startTime);
-//     const hours = Math.floor(diff / (1000 * 60 * 60));
-//     const minutes = Math.round((diff % (1000 * 60 * 60)) / (1000 * 60));
-//     return {
-//         totalHours: (diff / (1000 * 60 * 60)).toFixed(2),
-//         hoursAndMinutes: `${hours}h ${minutes}m`
-//     };
-// }
-// //!SECTION - Automatische Zeitvorgabe
-
-// //SECTION - Funktionen für Modals
-// // Add-Modal
-// addButtonAddModal.addEventListener('click', () => toggleModal(addModal, addBackdrop, true));
-// addBackdrop.addEventListener('click', () => toggleModal(addModal, addBackdrop, false));
-// abortButtonAddModal.addEventListener('click', () => toggleModal(addModal, addBackdrop, false));
+//!SECTION - Funktionen für Add-Modal
 
 // submitButtonAddModal.addEventListener('click', async () => {
 //     const shift = document.getElementById('shift').value;
 //     const start_time = document.getElementById('start_time').value;
 //     const end_time = document.getElementById('end_time').value;
-
-//     // Berechnung der Arbeitszeit
-//     const { totalHours, hoursAndMinutes } = calculateWorkingTime(start_time, end_time);
 
 //     // API-Aufruf
 //     try {
@@ -95,7 +56,6 @@ import { log } from './helper.js';
 //         log(error, 'error');
 //     }
 // });
-// //!SECTION - Funktionen für Add-Modal
 
 
 // //SECTION - Funktionen für Edit-Modal
@@ -111,9 +71,6 @@ import { log } from './helper.js';
 //     document.getElementById('edit-start-time').value = entry.start_time;
 //     document.getElementById('edit-end-time').value = entry.end_time;
 // }
-
-// editBackdrop.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
-// abortButtonEditModal.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
 
 // saveButtonEditModal.addEventListener('click', async () => {
 //     const confirmed = window.confirm("Möchten Sie die Änderungen wirklich speichern?");

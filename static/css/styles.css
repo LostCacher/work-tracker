@@ -1,4 +1,17 @@
-/*SECTION - Header */
+/* SECTION - Bootstrap Override */
+:root,
+[data-bs-theme=light] {
+    --bs-light-rgb: 68, 217, 232;
+}
+
+[data-bs-theme=dark] {
+  color-scheme: dark;
+  /* --bs-light-rgb: 255, 0, 0; */
+}
+/* !SECTION - Bootstrap Override */
+
+
+/* SECTION - Header */
 .header__trennlinie{
     margin-top: 0;
     margin-bottom: 0;
@@ -26,8 +39,8 @@
 /*!SECTION - Filter Form */
 
 
-/*SECTION - Modals */
-.modal {
+/* SECTION - Modals */
+/* .modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -40,7 +53,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 90%;
     max-width: 400px;
-}
+} */
 
 .modal__backdrop {
     display: none;
