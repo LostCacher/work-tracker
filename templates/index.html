@@ -111,23 +111,25 @@
         <i class="bi bi-plus-circle"></i>
     </button>
 
-    <!-- Work Entry Modal -->
-    <div class="modal fade" id="modal__add" tabindex="-1" aria-labelledby="modal__add--title">
+    <div class="modal" id="modal__add" tabindex="-1" aria-labelledby="modal__add--title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark">
+                <!-- Error Alert -->
+                <div id="modal__add--error"></div>
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modal__add--title">Hinzufügen:</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="modal__add--form" novalidate>
                         <div class="mb-3">
                             <label for="modal__add--date" class="form-label">Datum:</label>
                             <input type="date" id="modal__add--date" name="date" class="form-control" required>
+                            <div class="invalid-feedback">Bitte ein Datum auswählen.</div>
                         </div>
                         <div class="mb-3">
                             <label for="modal__add--shift" class="form-label">Schicht:</label>
-                            <select id="modal__add--shift" name="shift" class="form-select">
+                            <select id="modal__add--shift" name="shift" class="form-select" required>
                                 <option value="Frühschicht">Frühschicht</option>
                                 <option value="Spätschicht">Spätschicht</option>
                                 <option value="Nachtschicht">Nachtschicht</option>
@@ -135,16 +137,19 @@
                                 <option value="Berreitschaft">Berreitschaft</option>
                                 <option value="Lehrgang">Lehrgang</option>
                             </select>
+                            <div class="invalid-feedback">Bitte eine Schicht auswählen.</div>
                         </div>
                         <div class="mb-3">
                             <label for="modal__add--start-time" class="form-label">Schichtbeginn:</label>
                             <input type="datetime-local" id="modal__add--start-time" name="start_time"
                                 class="form-control" required>
+                            <div class="invalid-feedback">Bitte einen Schichtbeginn eingeben.</div>
                         </div>
                         <div class="mb-3">
                             <label for="modal__add--end-time" class="form-label">Schichtende:</label>
                             <input type="datetime-local" id="modal__add--end-time" name="end_time" class="form-control"
                                 required>
+                            <div class="invalid-feedback">Bitte ein Schichtende eingeben.</div>
                         </div>
                     </form>
                 </div>

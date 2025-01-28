@@ -2,7 +2,7 @@
 import { log, setDefaultTimes } from './helper.js';
 import { loadWorkEntries } from './render.js';
 // import {  } from './modals.js';
-// import {  } from './api.js';
+import { saveLogic } from './api.js';
 //!SECTION - IMPORTS
 
 
@@ -36,6 +36,12 @@ shiftAddModal.addEventListener('change', () => {
     setDefaultTimes(shiftAddModal.value, dateAddModal.value);
 });
 
+document.getElementById("modal__add--save-button").addEventListener("click", () => {
+    saveLogic("modal__add");
+});
+//!SECTION - Event Listener
+
+
 // document.getElementById("start_time").value = formattedStart;
 // document.getElementById("end_time").value = formattedEnd;
 
@@ -45,4 +51,3 @@ shiftAddModal.addEventListener('change', () => {
 // editBackdrop.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
 // abortButtonEditModal.addEventListener('click', () => toggleModal(editModal, editBackdrop, false));
 // row.addEventListener('dblclick', () => openEditModal(entry));
-//!SECTION - Event Listener
