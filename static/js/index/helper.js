@@ -123,15 +123,23 @@ export function calculateWorkingTime(startTime, endTime) {
 //SECTION - Generate Alert Message
 export function generateAlert(errorID, message, type = 'danger', duration = 5000) {
     const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', `alert-${type}`, 'alert-dismissible', 'fade', 'show');
+    alertDiv.classList.add('alert', `alert-${type}`, 'fade', 'show');
     alertDiv.setAttribute('role', 'alert');
 
     const alertText = document.createElement('div');
-    alertText.classList.add('mx-auto', 'text-center', 'd-flex', 'align-items-center');
-    const icon = document.createElement('i');
-    icon.classList.add('bi', 'bi-exclamation-triangle', 'm-2');
-    alertText.appendChild(icon);
-    alertText.innerHTML += `<strong>${message}</strong>`;
+    alertText.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'text-center');
+
+    const iconStart = document.createElement('i');
+    iconStart.classList.add('bi', 'bi-exclamation-triangle', 'm-2');
+    alertText.appendChild(iconStart);
+
+    const messageText = document.createElement('strong');
+    messageText.innerText = message;
+    alertText.appendChild(messageText);
+
+    const iconEnd = document.createElement('i');
+    iconEnd.classList.add('bi', 'bi-exclamation-triangle', 'm-2');
+    alertText.appendChild(iconEnd);
 
     alertDiv.appendChild(alertText);
     errorID.appendChild(alertDiv);
