@@ -122,9 +122,9 @@ def add_work_entry():
         return jsonify({"error": str(e)}), 400
 
 
-@app.route("/api/work_entries/<int:id>", methods=["PUT", "DELETE"])
+@app.route("/api/work_entries/<int:id>", methods=["GET", "PUT", "DELETE"])
 def manage_work_entry(id):
-    """Bearbeiten (PUT) oder Löschen (DELETE) eines Work-Eintrags."""
+    """Bearbeiten (PUT), Löschen (DELETE) oder Abrufen (GET) eines Work-Eintrags."""
     entry = db.session.get(WorkEntry, id)
     if not entry:
         return jsonify({"error": "Work entry not found"}), 404
@@ -143,6 +143,18 @@ def manage_work_entry(id):
         entry.working_time_hm = data["working_time_hm"]
         db.session.commit()
         return jsonify({"message": "Work entry updated successfully!"}), 200
+
+    if request.method == "GET":
+        return jsonify(
+            {
+                "id": entry.id,
+                "shift": entry.shift,
+                "start_time": entry.start_time,
+                "end_time": entry.end_time,
+                "working_time": entry.working_time,
+                "working_time_hm": entry.working_time_hm,
+            }
+        )
 
 
 # Tabellen erstellen

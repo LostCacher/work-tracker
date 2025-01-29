@@ -55,6 +55,15 @@ export function formatDate(dateString) {
 }
 //!SECTION - Format Date
 
+//SECTION - Extract Year and Month
+export function extractYearAndMonth(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Monate sind nullbasiert
+    return { year, month };
+}
+//!SECTION - Extract Year and Month
+
 // SECTION - Automatische Zeitvorgabe Add Modal
 const shiftTimes = {
     "Frühschicht": { start: "05:30", end: "13:30" },
@@ -151,3 +160,55 @@ export function generateAlert(errorID, message, type = 'danger', duration = 5000
     }, duration);
 }
 //!SECTION - Generate Alert Message
+
+
+//SECTION - Load Entry Data
+export function loadEntryData(entryId, modalId) {
+    fetch(`/api/work_entries/${entryId}`)
+        .then(response => response.json())
+        .then(data => {
+            const form = modalId.querySelector('form');
+            form.elements['id'].value = data.id;
+            form.elements['shift'].value = data.shift;
+            form.elements['start_time'].value = data.start_time;
+            form.elements['end_time'].value = data.end_time;
+        })
+        .catch(error => log(`Fehler beim Laden der Eintragsdaten: ${error}`, 'error'));
+}
+//!SECTION - Load Entry Data
+
+
+//SECTION - backup question
+export function backupQuestion(event, action, callback) {
+    const button = event.target;
+    let clickCount = 0;
+    let timer;
+
+    // Funktion zum Starten des Timers
+    const startTimer = () => {
+        timer = setTimeout(() => {
+            clickCount = 0; // Reset click count after timeout
+        }, 500);
+    };
+
+    // Funktion zum Abbrechen des Timers
+    const cancelTimer = () => {
+        clearTimeout(timer);
+    };
+
+    // Funktion zum Überprüfen der Klicks
+    const checkClicks = () => {
+        clickCount++;
+        if (clickCount === 1) {
+            startTimer();
+        }
+        if (clickCount === 3) {
+            cancelTimer();
+            callback();
+        }
+    };
+
+    // Klick-Event-Listener hinzufügen
+    button.addEventListener('click', checkClicks);
+}
+//!SECTION - Handle Long Press

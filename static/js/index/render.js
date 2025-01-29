@@ -83,7 +83,7 @@ export async function loadWorkEntries(year = null, month = null) {
 //!SECTION - FUNCTION: loadWorkEntries
 
 
-//SECTION - FUNCTION: Generate Calendar
+//SECTION - FUNCTION: generateCalendar
 function generateCalendar(year, month) {
     const calendarGrid = document.getElementById('calendar-grid');
     calendarGrid.innerHTML = ''; // Kalender-Grid leeren
@@ -105,7 +105,7 @@ function generateCalendar(year, month) {
     // Tage im Monat erzeugen
     for (let day = 1; day <= daysInMonth; day++) {
         const dayCell = document.createElement('div');
-        dayCell.classList.add('calendar__cell');
+        dayCell.classList.add('calendar__cell', 'user-select-none');
         dayCell.textContent = day;
 
         // Arbeitseinträge für diesen Tag filtern
@@ -118,12 +118,13 @@ function generateCalendar(year, month) {
         if (dayEntries.length > 0) {
             dayEntries.forEach(entry => {
                 const entryDiv = document.createElement('div');
-                entryDiv.classList.add('calendar__entry');
+                entryDiv.classList.add('calendar__entry', 'user-select-none');
                 entryDiv.classList.add(getShiftClass(entry.shift)); // Dynamische Shift-Klasse hinzufügen
+                entryDiv.setAttribute('entry__data--id', entry.id); // ID des Eintrags hinzufügen
 
                 // Text für Schicht und Arbeitszeit
                 entryDiv.innerHTML = `
-                    <span>${entry.shift} (${entry.working_time_hm})</span>
+                    ${entry.shift} (${entry.working_time_hm})
                 `;
 
                 dayCell.appendChild(entryDiv);
@@ -133,4 +134,4 @@ function generateCalendar(year, month) {
         calendarGrid.appendChild(dayCell);
     }
 }
-//!SECTION - FUNCTION: Generate Calendar
+//!SECTION - FUNCTION: generateCalendar

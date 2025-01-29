@@ -164,40 +164,61 @@
     <!--//!SECTION - Modal (Hinzufügen)-->
 
     <!--//SECTION - Modal (Bearbeiten)-->
-    <!-- <div id="edit-modal-backdrop" class="modal__backdrop"></div>
-    <div id="edit-work-entry-modal" class="modal">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4>Eintrag bearbeiten:</h4>
-            <div>
-                <span>ID:</span>
-                <span id="edit-id"></span>
+    <div class="modal" id="modal__edit" tabindex="-1" aria-labelledby="modal__edit--title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <!-- Error Alert -->
+                <div id="modal__edit--error"></div>
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal__edit--title">Bearbeiten:</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal__edit--form" novalidate>
+                        <div class="mb-3">
+                            <label for="modal__edit--id" class="form-label">ID:</label>
+                            <input type="text" id="modal__edit--id" name="id" class="form-control" readonly required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__edit--shift" class="form-label">Schicht:</label>
+                            <select id="modal__edit--shift" name="shift" class="form-select" required>
+                                <option value="Frühschicht">Frühschicht</option>
+                                <option value="Spätschicht">Spätschicht</option>
+                                <option value="Nachtschicht">Nachtschicht</option>
+                                <option value="Werkstatt">Werkstatt</option>
+                                <option value="Berreitschaft">Berreitschaft</option>
+                                <option value="Lehrgang">Lehrgang</option>
+                            </select>
+                            <div class="invalid-feedback">Bitte eine Schicht auswählen.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__edit--start-time" class="form-label">Schichtbeginn:</label>
+                            <input type="datetime-local" id="modal__edit--start-time" name="start_time"
+                                class="form-control" required>
+                            <div class="invalid-feedback">Bitte einen Schichtbeginn eingeben.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__edit--end-time" class="form-label">Schichtende:</label>
+                            <input type="datetime-local" id="modal__edit--end-time" name="end_time" class="form-control"
+                                required>
+                            <div class="invalid-feedback">Bitte ein Schichtende eingeben.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
+
+                    <button type="button" id="modal__edit--delete-button" class="btn btn-danger"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Zum Bestätigen 3x schnell drücken">Löschen</button>
+
+                    <button type="button" id="modal__edit--save-button" class="btn btn-success" data-bs-toggle="tooltip"
+                        data-bs-placement="top" data-bs-title="Zum Bestätigen 3x schnell drücken">Speichern</button>
+                </div>
             </div>
         </div>
-
-        <label for="edit-shift">Schicht:</label>
-        <select id="edit-shift" name="shift" class="form-control mb-2" onchange="setDefaultTimes()">
-            <option value="Frühschicht">Frühschicht</option>
-            <option value="Spätschicht">Spätschicht</option>
-            <option value="Nachtschicht">Nachtschicht</option>
-            <option value="Werkstatt">Werkstatt</option>
-            <option value="Berreitschaft">Berreitschaft</option>
-            <option value="Lehrgang">Lehrgang</option>
-        </select>
-
-        <label for="edit-start-time">Schichtbeginn:</label>
-        <input type="datetime-local" id="edit-start-time" name="start_time" class="form-control mb-2" required>
-
-        <label for="edit-end-time">Schichtende:</label>
-        <input type="datetime-local" id="edit-end-time" name="end_time" class="form-control mb-2" required>
-
-        <button type="button" id="save-button-edit-modal"
-            class="btn btn-success w-100 modal__button--save">Speichern</button>
-        <button type="button" id="delete-button-edit-modal"
-            class="btn btn-danger w-100 modal__button--delete">Löschen</button>
-        <button type="button" id="abort-button-edit-modal"
-            class="btn btn-warning w-100 modal__button--abort">Abbrechen</button>
-        </form>
-    </div> -->
+    </div>
     <!--//!SECTION - Modal (Bearbeiten)-->
 
     <!--//SECTION - JavaScript einbinden-->
