@@ -1,5 +1,5 @@
 //SECTION - IMPORTS
-import { log, getMonthName, getShiftClass } from './helper.js';
+import { log, getMonthName, getShiftClass, getWeekNumber } from './helper.js';
 //!SECTION - IMPORTS
 
 let work_entries = [];
@@ -95,10 +95,26 @@ function generateCalendar(year, month) {
     let firstDayOfWeek = firstDayOfMonth.getDay();
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Montag als erster Wochentag
 
+    // Wochentage hinzufügen
+    const weekDays = ['KW', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    weekDays.forEach(day => {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('calendar__weekday');
+        dayCell.textContent = day;
+        calendarGrid.appendChild(dayCell);
+    });
+
+    // Wochennummer für die erste Woche hinzufügen
+    let currentWeekNumber = getWeekNumber(firstDayOfMonth);
+    const firstWeekCell = document.createElement('div');
+    firstWeekCell.classList.add('calendar__week');
+    firstWeekCell.textContent = `${currentWeekNumber}`;
+    calendarGrid.appendChild(firstWeekCell);
+
     // Leere Felder für die Tage vor dem Monatsanfang
     for (let i = 0; i < firstDayOfWeek; i++) {
         const emptyCell = document.createElement('div');
-        emptyCell.classList.add('calendar__cell');
+        emptyCell.classList.add('calendar__cell', 'calendar__cell--empty');
         calendarGrid.appendChild(emptyCell);
     }
 
@@ -108,11 +124,13 @@ function generateCalendar(year, month) {
         dayCell.classList.add('calendar__cell', 'user-select-none');
         dayCell.textContent = day;
 
-        // Arbeitseinträge für diesen Tag filtern
-        const dayEntries = work_entries.filter(entry => {
-            const entryDate = new Date(entry.start_time);
-            return entryDate.getDate() === day && entryDate.getMonth() === month - 1 && entryDate.getFullYear() === parseInt(year, 10);
-        });
+        // Arbeitseinträge für diesen Tag filtern und sortieren
+        const dayEntries = work_entries
+            .filter(entry => {
+                const entryDate = new Date(entry.start_time);
+                return entryDate.getDate() === day && entryDate.getMonth() === month - 1 && entryDate.getFullYear() === parseInt(year, 10);
+            })
+            .sort((a, b) => new Date(a.end_time) - new Date(b.end_time)); // Nach end_time sortieren
 
         // Arbeitseinträge anzeigen
         if (dayEntries.length > 0) {
@@ -124,7 +142,7 @@ function generateCalendar(year, month) {
 
                 // Text für Schicht und Arbeitszeit
                 entryDiv.innerHTML = `
-                    ${entry.shift} (${entry.working_time_hm})
+                    ${entry.shift}<br>(${entry.working_time_hm})
                 `;
 
                 dayCell.appendChild(entryDiv);
@@ -132,6 +150,15 @@ function generateCalendar(year, month) {
         }
 
         calendarGrid.appendChild(dayCell);
+
+        // Wochennummer hinzufügen, wenn die Woche endet
+        if ((firstDayOfWeek + day) % 7 === 0 && day !== daysInMonth) {
+            currentWeekNumber++;
+            const weekCell = document.createElement('div');
+            weekCell.classList.add('calendar__week');
+            weekCell.textContent = `${currentWeekNumber}`;
+            calendarGrid.appendChild(weekCell);
+        }
     }
 }
 //!SECTION - FUNCTION: generateCalendar

@@ -205,10 +205,22 @@ export function backupQuestion(event, action, callback) {
         if (clickCount === 3) {
             cancelTimer();
             callback();
+            // Entferne den Event-Listener nach erfolgreicher Ausführung
+            button.removeEventListener('click', checkClicks);
         }
     };
 
-    // Klick-Event-Listener hinzufügen
-    button.addEventListener('click', checkClicks);
+    // Klick-Event-Listener hinzufügen, wenn er noch nicht vorhanden ist
+    if (!button.hasEventListener) {
+        button.addEventListener('click', checkClicks);
+        button.hasEventListener = true;
+    }
 }
 //!SECTION - Handle Long Press
+
+// Funktion zur Berechnung der Kalenderwoche
+export function getWeekNumber(date) {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+}
