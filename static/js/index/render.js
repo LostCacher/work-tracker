@@ -96,7 +96,7 @@ function generateCalendar(year, month) {
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Montag als erster Wochentag
 
     // Wochentage hinzufügen
-    const weekDays = ['KW', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const weekDays = ['', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
     weekDays.forEach(day => {
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar__weekday');
