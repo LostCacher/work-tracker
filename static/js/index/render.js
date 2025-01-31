@@ -96,7 +96,7 @@ function generateCalendar(year, month) {
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Montag als erster Wochentag
 
     // Wochentage hinzufügen
-    const weekDays = ['KW', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    const weekDays = ['KW', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
     weekDays.forEach(day => {
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar__weekday');
@@ -108,7 +108,7 @@ function generateCalendar(year, month) {
     let currentWeekNumber = getWeekNumber(firstDayOfMonth);
     const firstWeekCell = document.createElement('div');
     firstWeekCell.classList.add('calendar__week');
-    firstWeekCell.textContent = `${currentWeekNumber}`;
+    firstWeekCell.textContent = `KW ${currentWeekNumber}`;
     calendarGrid.appendChild(firstWeekCell);
 
     // Leere Felder für die Tage vor dem Monatsanfang
@@ -123,6 +123,10 @@ function generateCalendar(year, month) {
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar__cell', 'user-select-none');
         dayCell.textContent = day;
+
+        // Wochentag und Tag hinzufügen
+        const weekDay = new Date(year, month - 1, day).toLocaleDateString('de-DE', { weekday: 'long' });
+        dayCell.innerHTML = `${day} <span class="calendar__day-with-weekday">${weekDay}</span>`;
 
         // Arbeitseinträge für diesen Tag filtern und sortieren
         const dayEntries = work_entries
@@ -156,7 +160,7 @@ function generateCalendar(year, month) {
             currentWeekNumber++;
             const weekCell = document.createElement('div');
             weekCell.classList.add('calendar__week');
-            weekCell.textContent = `${currentWeekNumber}`;
+            weekCell.textContent = `KW ${currentWeekNumber}`;
             calendarGrid.appendChild(weekCell);
         }
     }

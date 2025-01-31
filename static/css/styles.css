@@ -27,7 +27,6 @@
     border: 1px solid var(--bs-gray-700);
 }
 
-
 .calendar__cell, .calendar__weekday, .calendar__week {
     background-color: var(--bs-gray-900);
     padding: 10px;
@@ -36,7 +35,6 @@
     position: relative;
     color: var(--bs-light);
 }
-
 
 .calendar__weekday {
     font-weight: bold;
@@ -73,8 +71,13 @@
 }
 
 .calendar__cell--empty {
-    background-color: transparent;
-    border: none;
+    padding: 5px;
+    background-color: var(--bs-gray-800);
+    border: 1px solid var(--bs-gray-700);
+}
+
+.calendar__day-with-weekday {
+    display: none;
 }
 
 /* Schichtstile */
@@ -103,17 +106,43 @@
 }
 
 /* Responsive Anpassungen */
-/* @media (max-width: 768px) { */
-    /* .calendar__grid { */
-        /* grid-template-columns: repeat(2, 1fr); */
-    /* } */
+@media (max-width: 768px) {
+    .calendar__grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
 
-    /* .calendar__weekday, .calendar__week { */
-        /* display: none; */
-    /* } */
+    .calendar__weekday {
+        display: none;
+    }
 
-    /* .calendar__cell { */
-        /* min-height: 80px; */
-    /* } */
-/* } */
+    .calendar__week {
+        display: flex;
+        font-size: 0.8em;
+        padding: 5px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .calendar__cell {
+        min-height: 80px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .calendar__entry {
+        font-size: 0.8em;
+        padding: 3px;
+        width: 100%;
+    }
+
+    .calendar__cell--empty {
+        display: none;
+    }
+
+    .calendar__day-with-weekday {
+        display: inline;
+    }
+}
 /*!SECTION - Calendar */
