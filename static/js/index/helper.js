@@ -183,6 +183,7 @@ export function backupQuestion(event, action, callback) {
     const button = event.target;
     let clickCount = 0;
     let timer;
+    let removeListenerTimer;
 
     // Funktion zum Starten des Timers
     const startTimer = () => {
@@ -196,17 +197,32 @@ export function backupQuestion(event, action, callback) {
         clearTimeout(timer);
     };
 
+    // Funktion zum Entfernen des Event-Listeners nach 3 Sekunden
+    const startRemoveListenerTimer = () => {
+        removeListenerTimer = setTimeout(() => {
+            if (button.hasEventListener) {
+                button.removeEventListener('click', checkClicks);
+                button.hasEventListener = false;
+            }
+        }, 3000);
+    };
+
     // Funktion zum Überprüfen der Klicks
     const checkClicks = () => {
         clickCount++;
         if (clickCount === 1) {
             startTimer();
+            startRemoveListenerTimer(); // Startet den Timer zum Entfernen des Event-Listeners
         }
         if (clickCount === 3) {
             cancelTimer();
+            clearTimeout(removeListenerTimer); // Stoppt den Timer zum Entfernen des Event-Listeners
             callback();
             // Entferne den Event-Listener nach erfolgreicher Ausführung
-            button.removeEventListener('click', checkClicks);
+            if (button.hasEventListener) {
+                button.removeEventListener('click', checkClicks);
+                button.hasEventListener = false;
+            }
         }
     };
 
