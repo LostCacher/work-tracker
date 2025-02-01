@@ -154,3 +154,20 @@ export async function deleteEntry(modalId) {
     }
 }
 //!SECTION - Delete Entry
+
+
+//SECTION - Auto Logout
+let logoutTimer;
+
+function resetLogoutTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+        window.location.href = logoutUrl; // Verwende die übergebene URL
+    }, 1800000); // 30 Minuten in Millisekunden 1800000
+}
+
+document.onload = resetLogoutTimer;
+document.onmousemove = resetLogoutTimer;
+document.onclick = resetLogoutTimer;
+document.onscroll = resetLogoutTimer;
+//!SECTION - Auto Logout

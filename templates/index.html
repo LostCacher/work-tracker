@@ -24,7 +24,9 @@
         <nav class="navbar bg-body">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Unsichtbarer Platzhalter für korrekte Zentrierung -->
-                <div class="d-none d-lg-block" style="width: 54px;"></div>
+                <div class="d-none d-lg-block" style="width: 54px;"><a class="bi bi-box-arrow-left my-auto m-3 fs-3"
+                        href="{{ url_for('logout') }}"></a>
+                </div>
 
                 <!-- Seitenüberschrift zentriert -->
                 <h1 class="text-center mx-auto my-auto text-light text-uppercase">Arbeitseinträge</h1>
@@ -47,6 +49,10 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
+                            <a class="bi bi-box-arrow-left nav-link text-light fs-3" href="{{ url_for('logout') }}">
+                                Logout</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link active text-light" href="#">Home</a>
                         </li>
                         <li class="nav-item">
@@ -54,9 +60,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="#">About</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#"
@@ -228,6 +231,8 @@
         crossorigin="anonymous"></script>
 
     <!-- My JS -->
+    <!-- Übergebe die Logout-URL an das JavaScript -->
+    <script>const logoutUrl = "{{ url_for('logout') }}";</script>
     <script type="module" src="{{ url_for('static', filename='js/index/main.js') }}"></script>
     <!--//!SECTION - JavaScript einbinden-->
 </body>

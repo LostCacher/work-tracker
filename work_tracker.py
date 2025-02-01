@@ -1,19 +1,58 @@
 import os
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 from flask_sqlalchemy import SQLAlchemy
+
+from models import User, db
 
 # Flask-App initialisieren
 app = Flask(__name__)
 
 # Datenbank konfigurieren
+app.config["SECRET_KEY"] = "your_secret_key"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, "db", "work_tracker.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Datenbank initialisieren
-db = SQLAlchemy(app)
+db.init_app(app)
+
+# Login-Manager initialisieren
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        data = request.form
+        user = User.query.filter_by(username=data["username"]).first()
+        if user and user.check_password(data["password"]):
+            login_user(user)
+            return redirect(url_for("index"))
+        flash("Invalid username or password", "danger")
+    return render_template("login.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 
 # Datenbankmodelle definieren
@@ -28,12 +67,14 @@ class WorkEntry(db.Model):
 
 # Routen definieren
 @app.route("/")
+@login_required
 def index():
     """Lädt die Startseite."""
     return render_template("index.html")
 
 
 @app.route("/api/work_entries", methods=["GET"])
+@login_required
 def get_work_entries():
     """Gibt gefilterte und sortierte Work-Einträge zurück."""
     year = request.args.get("year", type=int)
@@ -72,6 +113,7 @@ def get_work_entries():
 
 
 @app.route("/api/available_years_and_months", methods=["GET"])
+@login_required
 def available_years_and_months():
     """Gibt die verfügbaren Jahre und Monate für Work-Einträge zurück."""
     years_query = db.session.query(
@@ -101,6 +143,7 @@ def available_years_and_months():
 
 
 @app.route("/api/work_entries", methods=["POST"])
+@login_required
 def add_work_entry():
     """Erstellt einen neuen Work-Eintrag."""
     data = request.get_json()
@@ -123,6 +166,7 @@ def add_work_entry():
 
 
 @app.route("/api/work_entries/<int:id>", methods=["GET", "PUT", "DELETE"])
+@login_required
 def manage_work_entry(id):
     """Bearbeiten (PUT), Löschen (DELETE) oder Abrufen (GET) eines Work-Eintrags."""
     entry = db.session.get(WorkEntry, id)
