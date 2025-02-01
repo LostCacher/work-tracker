@@ -12,5 +12,3 @@ with app.app_context():
     db.session.add(user)
     db.session.commit()
     print(f"User {username} created successfully!")
-
-bla
