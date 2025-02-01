@@ -1,5 +1,5 @@
 //SECTION - IMPORTS
-import { log, getMonthName, getShiftClass, getWeekNumber } from './helper.js';
+import { log, getMonthName, getShiftClass, getWeekNumber, formatTime } from './helper.js';
 //!SECTION - IMPORTS
 
 let work_entries = [];
@@ -146,7 +146,7 @@ function generateCalendar(year, month) {
 
                 // Text für Schicht und Arbeitszeit
                 entryDiv.innerHTML = `
-                    ${entry.shift}<br>(${entry.working_time_hm})
+                    ${entry.shift}<br>${formatTime(entry.start_time)} - ${formatTime(entry.end_time)}<br>(${entry.working_time_hm})
                 `;
 
                 dayCell.appendChild(entryDiv);

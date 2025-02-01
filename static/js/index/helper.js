@@ -240,3 +240,9 @@ export function getWeekNumber(date) {
     const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 }
+
+// Funktion zum Extrahieren der Zeit aus einem Zeitstempel
+export const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+};
