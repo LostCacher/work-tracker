@@ -4,6 +4,7 @@ import { log, getMonthName, getShiftClass, getWeekNumber, formatTime } from './h
 
 let work_entries = [];
 
+//SECTION - FUNCTION: loadWorkEntries
 export async function loadWorkEntries(year = null, month = null) {
     try {
         // Abruf der verfügbaren Jahre und Monate

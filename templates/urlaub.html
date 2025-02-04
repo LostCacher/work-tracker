@@ -15,7 +15,7 @@
     <link id="dark-theme" rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
 
     <!-- My CSS -->
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles_vacation_entries.css">
 </head>
 
 <body>
@@ -82,7 +82,7 @@
     </header>
     <!--//!SECTION - Navbar-->
 
-    <!--//SECTION - Filter Jahr / Monat-->
+    <!--//SECTION - Filter Jahr-->
     <div class="d-flex justify-content-center mx-auto">
         <div class="text-center">
             <!-- Jahr-Filter -->
@@ -90,17 +90,12 @@
                 <label for="yearFilter" class="form-label m-0">Jahr:</label>
                 <select id="yearFilter" class="form-select m-0"></select>
             </div>
-
-            <!-- Monat-Filter -->
-            <div class="d-inline-flex align-items-center mx-2 gap-2">
-                <label for="monthFilter" class="form-label m-0">Monat:</label>
-                <select id="monthFilter" class="form-select m-0"></select>
-            </div>
         </div>
     </div>
-    <!--//!SECTION - Filter Jahr / Monat-->
+    <!--//!SECTION - Filter Jahr-->
 
     <!--//SECTION - Kalenderansicht-->
+    <!-- //TODO -  -->
     <div class="calendar__container">
         <div class="calendar__grid" id="calendar-grid">
             <!-- Der Kalender wird hier dynamisch generiert -->
@@ -111,7 +106,7 @@
 
     <!--//SECTION - Modal (Hinzufügen)-->
     <button type="button" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3" data-bs-toggle="modal"
-        data-bs-target="#modal__add" aria-label="Add work time">
+        data-bs-target="#modal__add" aria-label="Add vacation entry">
         <i class="bi bi-plus-circle"></i>
     </button>
 
@@ -122,39 +117,16 @@
                 <div id="modal__add--error"></div>
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal__add--title">Hinzufügen:</h1>
+                    <h1 class="modal-title fs-5" id="modal__add--title">Urlaubseintrag hinzufügen:</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="modal__add--form" novalidate>
                         <div class="mb-3">
-                            <label for="modal__add--date" class="form-label">Datum:</label>
-                            <input type="date" id="modal__add--date" name="date" class="form-control" required>
-                            <div class="invalid-feedback">Bitte ein Datum auswählen.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__add--shift" class="form-label">Schicht:</label>
-                            <select id="modal__add--shift" name="shift" class="form-select" required>
-                                <option value="Frühschicht">Frühschicht</option>
-                                <option value="Spätschicht">Spätschicht</option>
-                                <option value="Nachtschicht">Nachtschicht</option>
-                                <option value="Werkstatt">Werkstatt</option>
-                                <option value="Berreitschaft">Berreitschaft</option>
-                                <option value="Lehrgang">Lehrgang</option>
-                            </select>
-                            <div class="invalid-feedback">Bitte eine Schicht auswählen.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__add--start-time" class="form-label">Schichtbeginn:</label>
-                            <input type="datetime-local" id="modal__add--start-time" name="start_time"
-                                class="form-control" required>
-                            <div class="invalid-feedback">Bitte einen Schichtbeginn eingeben.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__add--end-time" class="form-label">Schichtende:</label>
-                            <input type="datetime-local" id="modal__add--end-time" name="end_time" class="form-control"
+                            <label for="modal__add--vacation_date" class="form-label">Datum:</label>
+                            <input type="date" id="modal__add--vacation_date" name="vacation_date" class="form-control"
                                 required>
-                            <div class="invalid-feedback">Bitte ein Schichtende eingeben.</div>
+                            <div class="invalid-feedback">Bitte ein Datum auswählen.</div>
                         </div>
                     </form>
                 </div>
@@ -175,7 +147,7 @@
                 <div id="modal__edit--error"></div>
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal__edit--title">Bearbeiten:</h1>
+                    <h1 class="modal-title fs-5" id="modal__edit--title">Urlaubseintrag bearbeiten:</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -185,28 +157,10 @@
                             <input type="text" id="modal__edit--id" name="id" class="form-control" readonly required>
                         </div>
                         <div class="mb-3">
-                            <label for="modal__edit--shift" class="form-label">Schicht:</label>
-                            <select id="modal__edit--shift" name="shift" class="form-select" required>
-                                <option value="Frühschicht">Frühschicht</option>
-                                <option value="Spätschicht">Spätschicht</option>
-                                <option value="Nachtschicht">Nachtschicht</option>
-                                <option value="Werkstatt">Werkstatt</option>
-                                <option value="Berreitschaft">Berreitschaft</option>
-                                <option value="Lehrgang">Lehrgang</option>
-                            </select>
-                            <div class="invalid-feedback">Bitte eine Schicht auswählen.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__edit--start-time" class="form-label">Schichtbeginn:</label>
-                            <input type="datetime-local" id="modal__edit--start-time" name="start_time"
+                            <label for="modal__edit--vacation_date" class="form-label">Datum:</label>
+                            <input type="datetime-local" id="modal__edit--vacation_date" name="vacation_date"
                                 class="form-control" required>
-                            <div class="invalid-feedback">Bitte einen Schichtbeginn eingeben.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__edit--end-time" class="form-label">Schichtende:</label>
-                            <input type="datetime-local" id="modal__edit--end-time" name="end_time" class="form-control"
-                                required>
-                            <div class="invalid-feedback">Bitte ein Schichtende eingeben.</div>
+                            <div class="invalid-feedback">Bitte einen Datum eingeben.</div>
                         </div>
                     </form>
                 </div>
@@ -234,7 +188,7 @@
     <!-- My JS -->
     <!-- Übergebe die Logout-URL an das JavaScript -->
     <script>const logoutUrl = "{{ url_for('logout') }}";</script>
-    <script type="module" src="{{ url_for('static', filename='js/index/main.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/urlaub/main.js') }}"></script>
     <!--//!SECTION - JavaScript einbinden-->
 </body>
 

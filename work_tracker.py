@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import (
@@ -74,9 +75,7 @@ class WorkEntry(db.Model):
 
 class VacationEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
-    days = db.Column(db.Integer, nullable=False)
+    vacation_date = db.Column(db.Date, nullable=False, index=True)
 
 
 # !SECTION - Datenbankmodelle definieren
@@ -236,11 +235,9 @@ def handle_vacation_entries():
     if request.method == "POST":
         data = request.get_json()
         try:
-            new_entry = VacationEntry(
-                start_date=data["start_date"],
-                end_date=data["end_date"],
-                days=data["days"],
-            )
+            vacation_date = datetime.strptime(data["vacation_date"], "%Y-%m-%d").date()
+
+            new_entry = VacationEntry(vacation_date=vacation_date)
             db.session.add(new_entry)
             db.session.commit()
             return jsonify({"message": "Vacation entry created successfully!"}), 201
@@ -248,18 +245,35 @@ def handle_vacation_entries():
             return jsonify({"error": str(e)}), 400
 
     if request.method == "GET":
-        entries = VacationEntry.query.all()
-        return jsonify(
+        year = request.args.get("year", type=int)
+        sort_order = request.args.get("sort", default="desc", type=str)
+
+        query = VacationEntry.query
+        if year:
+            query = query.filter(
+                db.func.strftime("%Y", VacationEntry.vacation_date) == str(year)
+            )
+
+        if sort_order == "asc":
+            query = query.order_by(VacationEntry.vacation_date.asc())
+
+        else:
+            query = query.order_by(VacationEntry.vacation_date.desc())
+
+        entries = query.all()
+
+        response = jsonify(
             [
                 {
                     "id": entry.id,
-                    "start_date": entry.start_date,
-                    "end_date": entry.end_date,
-                    "days": entry.days,
+                    "vacation_date": entry.vacation_date,
                 }
                 for entry in entries
             ]
         )
+
+        response.headers["Content-Type"] = "application/json; charset=UTF-8"
+        return response
 
 
 @app.route("/api/available_years_vacation", methods=["GET"])
@@ -267,7 +281,7 @@ def handle_vacation_entries():
 def available_years_vacation():
     """Gibt die verfügbaren Jahre für Urlaubs-Einträge zurück."""
     years_query = db.session.query(
-        db.func.strftime("%Y", VacationEntry.start_date)
+        db.func.strftime("%Y", VacationEntry.vacation_date)
     ).distinct()
 
     years = [year[0] for year in years_query]
@@ -291,9 +305,7 @@ def manage_vacation_entry(id):
 
     if request.method == "PUT":
         data = request.get_json()
-        entry.start_date = data["start_date"]
-        entry.end_date = data["end_date"]
-        entry.days = data["days"]
+        entry.vacation_date = data["vacation_date"]
         db.session.commit()
         return jsonify({"message": "Vacation entry updated successfully!"}), 200
 
@@ -301,9 +313,7 @@ def manage_vacation_entry(id):
         return jsonify(
             {
                 "id": entry.id,
-                "start_date": entry.start_date,
-                "end_date": entry.end_date,
-                "days": entry.days,
+                "vacation_date": entry.vacation_date,
             }
         )
 
