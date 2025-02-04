@@ -12,20 +12,21 @@ from flask_sqlalchemy import SQLAlchemy
 
 from models import User, db
 
-# Flask-App initialisieren
 app = Flask(__name__)
 
-# Datenbank konfigurieren
-app.config["SECRET_KEY"] = "your_secret_key"
+# SECTION - Datenbank konfigurieren
+app.config["SECRET_KEY"] = os.environ.get(
+    "SECRET_KEY_WORK_TRACKER", "default_secret_key"
+)
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, "db", "work_tracker.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Datenbank initialisieren
 db.init_app(app)
+# !SECTION - Datenbank konfigurieren
 
-# Login-Manager initialisieren
+# SECTION - Login-Manager initialisieren
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -36,6 +37,10 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+# !SECTION - Login-Manager initialisieren
+
+
+# SECTION - Routen für Authentifizierung
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -49,13 +54,15 @@ def login():
 
 
 @app.route("/logout")
-@login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
 
-# Datenbankmodelle definieren
+# !SECTION - Routen für Authentifizierung
+
+
+# SECTION - Datenbankmodelle definieren
 class WorkEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     shift = db.Column(db.String(50), nullable=False)
@@ -65,7 +72,17 @@ class WorkEntry(db.Model):
     working_time_hm = db.Column(db.String(5), nullable=False)
 
 
-# Routen definieren
+class VacationEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    days = db.Column(db.Integer, nullable=False)
+
+
+# !SECTION - Datenbankmodelle definieren
+
+
+# SECTION - Routen definieren
 @app.route("/")
 @login_required
 def index():
@@ -73,6 +90,16 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/urlaub")
+@login_required
+def vacation_entries():
+    return render_template("urlaub.html")
+
+
+# !SECTION - Routen definieren
+
+
+# SECTION - API-Routen für Work-Einträge
 @app.route("/api/work_entries", methods=["GET"])
 @login_required
 def get_work_entries():
@@ -107,7 +134,6 @@ def get_work_entries():
             for entry in entries
         ]
     )
-    # Setze den Content-Type Header auf 'application/json; charset=utf-8'
     response.headers["Content-Type"] = "application/json; charset=UTF-8"
     return response
 
@@ -115,7 +141,7 @@ def get_work_entries():
 @app.route("/api/available_years_and_months", methods=["GET"])
 @login_required
 def available_years_and_months():
-    """Gibt die verfügbaren Jahre und Monate für Work-Einträge zurück."""
+    """Gibt die verfügbaren Jahre und Monate für Arbeits-Einträge zurück."""
     years_query = db.session.query(
         db.func.strftime("%Y", WorkEntry.start_time)
     ).distinct()
@@ -137,7 +163,6 @@ def available_years_and_months():
         months_by_year[year] = months
 
     response = jsonify({"years": years, "months": months_by_year})
-    # Setze den Content-Type Header auf 'application/json; charset=utf-8'
     response.headers["Content-Type"] = "application/json; charset=UTF-8"
     return response
 
@@ -201,7 +226,92 @@ def manage_work_entry(id):
         )
 
 
-# Tabellen erstellen
+# !SECTION - API-Routen für Work-Einträge
+
+
+# SECTION - API-Routen für Urlaubseinträge
+@app.route("/api/vacation_entries", methods=["GET", "POST"])
+@login_required
+def handle_vacation_entries():
+    if request.method == "POST":
+        data = request.get_json()
+        try:
+            new_entry = VacationEntry(
+                start_date=data["start_date"],
+                end_date=data["end_date"],
+                days=data["days"],
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+            return jsonify({"message": "Vacation entry created successfully!"}), 201
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+
+    if request.method == "GET":
+        entries = VacationEntry.query.all()
+        return jsonify(
+            [
+                {
+                    "id": entry.id,
+                    "start_date": entry.start_date,
+                    "end_date": entry.end_date,
+                    "days": entry.days,
+                }
+                for entry in entries
+            ]
+        )
+
+
+@app.route("/api/available_years_vacation", methods=["GET"])
+@login_required
+def available_years_vacation():
+    """Gibt die verfügbaren Jahre für Urlaubs-Einträge zurück."""
+    years_query = db.session.query(
+        db.func.strftime("%Y", VacationEntry.start_date)
+    ).distinct()
+
+    years = [year[0] for year in years_query]
+
+    response = jsonify({"years": years})
+    response.headers["Content-Type"] = "application/json; charset=UTF-8"
+    return response
+
+
+@app.route("/api/vacation_entries/<int:id>", methods=["GET", "PUT", "DELETE"])
+@login_required
+def manage_vacation_entry(id):
+    entry = db.session.get(VacationEntry, id)
+    if not entry:
+        return jsonify({"error": "Vacation entry not found"}), 404
+
+    if request.method == "DELETE":
+        db.session.delete(entry)
+        db.session.commit()
+        return jsonify({"message": "Vacation entry deleted successfully!"}), 200
+
+    if request.method == "PUT":
+        data = request.get_json()
+        entry.start_date = data["start_date"]
+        entry.end_date = data["end_date"]
+        entry.days = data["days"]
+        db.session.commit()
+        return jsonify({"message": "Vacation entry updated successfully!"}), 200
+
+    if request.method == "GET":
+        return jsonify(
+            {
+                "id": entry.id,
+                "start_date": entry.start_date,
+                "end_date": entry.end_date,
+                "days": entry.days,
+            }
+        )
+
+
+# !SECTION - API-Routen für Urlaubseinträge
+
+
+# SECTION - Tabellen erstellen
 def create_tables():
     """Erstellt die Tabellen in der Datenbank, falls sie nicht existieren."""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -209,9 +319,11 @@ def create_tables():
         db.create_all()
 
 
-# Tabellen beim Start erstellen
 create_tables()
+# !SECTION - Tabellen erstellen
 
-# App starten
+
+# SECTION - App starten
 if __name__ == "__main__":
     app.run(host="10.0.0.5", port=5000, debug=True)
+# !SECTION - App starten
