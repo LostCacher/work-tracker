@@ -64,6 +64,11 @@ export async function editEntry(modalId) {
     const updatedEntry = Object.fromEntries(formData.entries());
     const errorID = document.getElementById(`${modalId}--error`);
 
+    // Datum zurückformatieren
+    const [year, month, day] = updatedEntry.vacation_date.split('-');
+    const date = new Date(year, month - 1, day);
+    // updatedEntry.vacation_date = date.toUTCString();
+
     log(`Formulardaten an API senden (Edit): ${JSON.stringify(updatedEntry, null, 2)}`, 'log');
 
     // Daten an die API senden
@@ -81,7 +86,7 @@ export async function editEntry(modalId) {
             const modalInstance = bootstrap.Modal.getInstance(modal);
             modalInstance.hide();
 
-            // Jahr und Monat aus vacation_date extrahieren und loadWorkEntries aufrufen
+            // Jahr und Monat aus vacation_date extrahieren und loadVacationEntries aufrufen
             const { year, month } = extractYearAndMonth(updatedEntry.vacation_date);
             loadVacationEntries(year, month);
 

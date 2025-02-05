@@ -41,19 +41,6 @@ export function getShiftClass(shift) {
 }
 //!SECTION - Schicht Classe for background
 
-//SECTION - Format Date
-//FIXME - wird noch nicht verwendet
-export function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleString('de-DE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-//!SECTION - Format Date
 
 //SECTION - Extract Year and Month
 export function extractYearAndMonth(dateString) {

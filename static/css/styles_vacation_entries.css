@@ -93,6 +93,10 @@
     border: 1px solid var(--bs-gray-700);
 }
 
+.calendar__day-with-weekday {
+    display: none;
+}
+
 /* Responsive Anpassungen */
 @media (max-width: 768px) {
     .calendar__grid {
@@ -111,6 +115,14 @@
     .calendar__entry {
         font-size: 0.8em;
         padding: 3px;
+    }
+
+    .calendar__cell--empty {
+        display: none;
+    }
+
+    .calendar__day-with-weekday {
+        display: inline;
     }
 }
 /*!SECTION - Calendar */

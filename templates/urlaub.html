@@ -86,7 +86,7 @@
     <div class="d-flex justify-content-center mx-auto">
         <div class="text-center">
             <!-- Jahr-Filter -->
-            <div class="d-inline-flex align-items-center mx-2 gap-2">
+            <div class="d-inline-flex align-items-center mx-2 gap-2 user-select-none">
                 <label for="yearFilter" class="form-label m-0">Jahr:</label>
                 <select id="yearFilter" class="form-select m-0"></select>
             </div>
@@ -158,8 +158,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="modal__edit--vacation_date" class="form-label">Datum:</label>
-                            <input type="datetime-local" id="modal__edit--vacation_date" name="vacation_date"
-                                class="form-control" required>
+                            <input type="date" id="modal__edit--vacation_date" name="vacation_date" class="form-control"
+                                required>
                             <div class="invalid-feedback">Bitte einen Datum eingeben.</div>
                         </div>
                     </form>

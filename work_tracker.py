@@ -305,9 +305,14 @@ def manage_vacation_entry(id):
 
     if request.method == "PUT":
         data = request.get_json()
-        entry.vacation_date = data["vacation_date"]
-        db.session.commit()
-        return jsonify({"message": "Vacation entry updated successfully!"}), 200
+        try:
+            vacation_date = datetime.strptime(data["vacation_date"], "%Y-%m-%d").date()
+
+            entry.vacation_date = vacation_date
+            db.session.commit()
+            return jsonify({"message": "Vacation entry updated successfully!"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
 
     if request.method == "GET":
         return jsonify(

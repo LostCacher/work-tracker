@@ -100,7 +100,11 @@ export function loadEntryData(entryId, modalId) {
         .then(data => {
             const form = modalId.querySelector('form');
             form.elements['id'].value = data.id;
-            form.elements['vacation_date'].value = data.vacation_date;
+
+            // Datum formatieren
+            const date = new Date(data.vacation_date);
+            const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            form.elements['vacation_date'].value = formattedDate;
         })
         .catch(error => log(`Fehler beim Laden der Eintragsdaten: ${error}`, 'error'));
 }
@@ -165,7 +169,9 @@ export function backupQuestion(event, action, callback) {
 
 // Funktion zur Berechnung der Kalenderwoche
 export function getWeekNumber(date) {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    const tempDate = new Date(date.getTime());
+    tempDate.setUTCDate(tempDate.getUTCDate() + 4 - (tempDate.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(tempDate.getUTCFullYear(), 0, 1));
+    const weekNumber = Math.ceil((((tempDate - yearStart) / 86400000) + 1) / 7);
+    return weekNumber;
 }

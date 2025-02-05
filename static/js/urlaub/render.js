@@ -126,11 +126,18 @@ function generateCalendar(year, vacation_entries) {
                         dayContent.classList.add('calendar__day-number', 'user-select-none');
                         dayContent.textContent = entry.dayNumber; // Tagesnummer anzeigen
                         dayCell.appendChild(dayContent);
+                        dayCell.setAttribute('entry__data--id', entry.id);
                     }
+
+                    const weekDayForPhone = document.createElement('div');
+                    weekDayForPhone.classList.add('calendar__day-with-weekday');
+                    weekDayForPhone.textContent = day;
+                    dayCell.appendChild(weekDayForPhone);
 
                     const entryDiv = document.createElement('div');
                     entryDiv.classList.add('calendar__entry', 'user-select-none');
                     entryDiv.textContent = `Urlaub`;
+                    entryDiv.setAttribute('entry__data--id', entry.id);
                     dayCell.appendChild(entryDiv);
                 });
             } else {

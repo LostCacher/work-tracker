@@ -37,10 +37,9 @@ document.getElementById("modal__add--save-button").addEventListener("click", () 
 //ANCHOR - Change Modal
 // Open Edit Modal
 document.addEventListener('dblclick', function (event) {
-    if (event.target.classList.contains('calendar__entry')) {
+    if (event.target.classList.contains('calendar__day-cell') || event.target.classList.contains('calendar__entry')) {
         const entryId = event.target.getAttribute('entry__data--id');
         const modal = document.getElementById('modal__edit');
-        const form = modal.querySelector('form');
         loadEntryData(entryId, modal);
 
         const modalInstance = new bootstrap.Modal(modal);
