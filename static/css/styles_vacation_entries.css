@@ -1,0 +1,128 @@
+/*SECTION - Buttons */
+.modal__button--abort{
+    font-weight: bolder;
+    margin-top: 10px;
+    --bs-btn-bg: #cf5d00;
+}
+.modal__button--delete{
+    font-weight: bolder;
+    margin-top: 10px;
+    --bs-btn-bg: #800000;
+}
+/*!SECTION - Buttons */
+
+
+/*SECTION - Calendar */
+.calendar__container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.calendar__grid {
+    display: grid;
+    grid-template-columns: 120px 60px repeat(7, 1fr); /* Monat (120px), KW (60px), Wochentage */
+    gap: 1px;
+    background-color: var(--bs-gray-800);
+    border: 1px solid var(--bs-gray-700);
+}
+
+.calendar__row {
+    display: contents; /* Ermöglicht Grid-Anordnung */
+}
+
+/* Header-Zeile */
+.calendar__header {
+    font-weight: bold;
+    background-color: var(--bs-gray-800);
+}
+
+.calendar__header-cell {
+    text-align: center;
+    padding: 10px;
+    color: var(--bs-light);
+}
+
+/* Spaltenformatierung */
+.calendar__cell {
+    min-height: 50px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--bs-gray-700);
+    background-color: var(--bs-gray-800);
+    color: var(--bs-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar__day-cell {
+    background-color: var(--bs-gray-900);
+}
+
+/* Erste Spalte: Monat */
+.calendar__month-cell {
+    font-weight: bold;
+    background-color: var(--bs-gray-800);
+    color: var(--bs-light);
+}
+
+/* Zweite Spalte: KW */
+.calendar__week-cell {
+    font-weight: bold;
+    background-color: var(--bs-gray-800);
+    color: var(--bs-light);
+}
+
+/* Urlaubseinträge */
+.calendar__entry {
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 4px;
+    background-color: #006900;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.calendar__cell--empty {
+    padding: 5px;
+    background-color: var(--bs-gray-800);
+    border: 1px solid var(--bs-gray-700);
+}
+
+.calendar__day-with-weekday {
+    display: none;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .calendar__grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .calendar__header {
+        display: none; /* Kopfzeile ausblenden */
+    }
+
+    .calendar__cell {
+        min-height: 80px;
+        padding: 5px;
+    }
+
+    .calendar__entry {
+        font-size: 0.8em;
+        padding: 3px;
+    }
+
+    .calendar__cell--empty {
+        display: none;
+    }
+
+    .calendar__day-with-weekday {
+        display: inline;
+    }
+}
+/*!SECTION - Calendar */

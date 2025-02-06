@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Tracker</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link id="dark-theme" rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/styles_vacation_entries.css">
+</head>
+
+<body>
+    <!--//SECTION - Navbar-->
+    <header>
+        <nav class="navbar bg-body">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <!-- Unsichtbarer Platzhalter für korrekte Zentrierung -->
+                <div class="d-none d-lg-block" style="width: 54px;"><a class="bi bi-box-arrow-left my-auto m-3 fs-3"
+                        href="{{ url_for('logout') }}"></a>
+                </div>
+
+                <!-- Seitenüberschrift zentriert -->
+                <h1 class="text-center mx-auto my-auto text-light text-uppercase">Urlaubseinträge</h1>
+
+                <!-- Offcanvas Toggler Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Open Navbar">
+                    <i class="navbar-toggler-icon"></i>
+                </button>
+            </div>
+
+            <!-- Offcanvas Navbar -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg"
+                aria-labelledby="navbarOffcanvasLgLabel">
+                <div class="offcanvas-header bg-primary">
+                    <h5 id="navbarOffcanvasLgLabel" class="offcanvas-title text-light fw-bolder">Navigation:</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close Navbar"></button>
+                </div>
+                <div class="offcanvas-body pt-0 text-center">
+                    <ul class="navbar-nav nav-pills ms-auto">
+                        <li class="nav-item">
+                            <a class="bi bi-box-arrow-left nav-link text-light fs-3" href="{{ url_for('logout') }}">
+                                Logout</a>
+                        </li>
+
+                        <hr class="mt-0 mb-3">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/">Arbeitseinträge</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-dark" href="/vacation">Urlaubseinträge</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/overview">Übersicht</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#"
+                                role="button" aria-haspopup="true" aria-expanded="false">API</a>
+                            <div class="dropdown-menu text-center">
+                                <a class="dropdown-item" href="/api/work_entries">alle Arbeitseinträge</a>
+                                <a class="dropdown-item" href="/api/available_years_and_months">Verfügbare Jahre/Monate
+                                    Arbeitseinträge</a>
+                                <a class="dropdown-item" href="/api/vacation_entries">alle Urlaubseinträge</a>
+                                <a class="dropdown-item" href="/api/available_years_vacation">Verfügbare
+                                    Jahre Urlaubsseinträge</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <hr class="mt-0 mb-3">
+    </header>
+    <!--//!SECTION - Navbar-->
+
+    <!--//SECTION - Filter Jahr-->
+    <div class="d-flex justify-content-center mx-auto">
+        <div class="text-center">
+            <!-- Jahr-Filter -->
+            <div class="d-inline-flex align-items-center mx-2 gap-2 user-select-none">
+                <label for="yearFilter" class="form-label m-0">Jahr:</label>
+                <select id="yearFilter" class="form-select m-0"></select>
+            </div>
+        </div>
+    </div>
+    <!--//!SECTION - Filter Jahr-->
+
+    <!--//SECTION - Kalenderansicht-->
+    <!-- //TODO -  -->
+    <div class="calendar__container">
+        <div class="calendar__grid" id="calendar-grid">
+            <!-- Der Kalender wird hier dynamisch generiert -->
+        </div>
+    </div>
+    <!--//!SECTION - Kalenderansicht-->
+
+
+    <!--//SECTION - Modal (Hinzufügen)-->
+    <button type="button" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3" data-bs-toggle="modal"
+        data-bs-target="#modal__add" aria-label="Add vacation entry">
+        <i class="bi bi-plus-circle"></i>
+    </button>
+
+    <div class="modal" id="modal__add" tabindex="-1" aria-labelledby="modal__add--title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <!-- Error Alert -->
+                <div id="modal__add--error"></div>
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal__add--title">Urlaubseintrag hinzufügen:</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal__add--form" novalidate>
+                        <div class="mb-3">
+                            <label for="modal__add--vacation_date" class="form-label">Datum:</label>
+                            <input type="date" id="modal__add--vacation_date" name="vacation_date" class="form-control"
+                                required>
+                            <div class="invalid-feedback">Bitte ein Datum auswählen.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" id="modal__add--save-button" class="btn btn-success">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//!SECTION - Modal (Hinzufügen)-->
+
+    <!--//SECTION - Modal (Bearbeiten)-->
+    <div class="modal" id="modal__edit" tabindex="-1" aria-labelledby="modal__edit--title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <!-- Error Alert -->
+                <div id="modal__edit--error"></div>
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal__edit--title">Urlaubseintrag bearbeiten:</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal__edit--form" novalidate>
+                        <div class="mb-3">
+                            <label for="modal__edit--id" class="form-label">ID:</label>
+                            <input type="text" id="modal__edit--id" name="id" class="form-control" readonly required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal__edit--vacation_date" class="form-label">Datum:</label>
+                            <input type="date" id="modal__edit--vacation_date" name="vacation_date" class="form-control"
+                                required>
+                            <div class="invalid-feedback">Bitte einen Datum eingeben.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
+
+                    <button type="button" id="modal__edit--delete-button" class="btn btn-danger"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Zum Bestätigen 3x schnell drücken">Löschen</button>
+
+                    <button type="button" id="modal__edit--save-button" class="btn btn-success" data-bs-toggle="tooltip"
+                        data-bs-placement="top" data-bs-title="Zum Bestätigen 3x schnell drücken">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//!SECTION - Modal (Bearbeiten)-->
+
+    <!--//SECTION - JavaScript einbinden-->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- My JS -->
+    <!-- Übergebe die Logout-URL an das JavaScript -->
+    <script>const logoutUrl = "{{ url_for('logout') }}";</script>
+    <script type="module" src="{{ url_for('static', filename='js/urlaub/main.js') }}"></script>
+    <!--//!SECTION - JavaScript einbinden-->
+</body>
+
+</html>
