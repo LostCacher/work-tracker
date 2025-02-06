@@ -15,7 +15,7 @@
     <link id="dark-theme" rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
 
     <!-- My CSS -->
-    <link rel="stylesheet" type="text/css" href="/static/css/styles_vacation_entries.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles_overview.css">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
                 </div>
 
                 <!-- Seitenüberschrift zentriert -->
-                <h1 class="text-center mx-auto my-auto text-light text-uppercase">Urlaubseinträge</h1>
+                <h1 class="text-center mx-auto my-auto text-light text-uppercase">Übersicht</h1>
 
                 <!-- Offcanvas Toggler Button -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
@@ -59,10 +59,10 @@
                             <a class="nav-link text-light" href="/">Arbeitseinträge</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active text-dark" href="/vacation">Urlaubseinträge</a>
+                            <a class="nav-link text-light" href="/vacation">Urlaubseinträge</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="/overview">Übersicht</a>
+                            <a class="nav-link active text-dark" href="/overview">Übersicht</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#"
@@ -97,90 +97,47 @@
     </div>
     <!--//!SECTION - Filter Jahr-->
 
-    <!--//SECTION - Kalenderansicht-->
-    <!-- //TODO -  -->
-    <div class="calendar__container">
-        <div class="calendar__grid" id="calendar-grid">
-            <!-- Der Kalender wird hier dynamisch generiert -->
-        </div>
-    </div>
-    <!--//!SECTION - Kalenderansicht-->
-
-
-    <!--//SECTION - Modal (Hinzufügen)-->
-    <button type="button" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3" data-bs-toggle="modal"
-        data-bs-target="#modal__add" aria-label="Add vacation entry">
-        <i class="bi bi-plus-circle"></i>
-    </button>
-
-    <div class="modal" id="modal__add" tabindex="-1" aria-labelledby="modal__add--title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark">
-                <!-- Error Alert -->
-                <div id="modal__add--error"></div>
-
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal__add--title">Urlaubseintrag hinzufügen:</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!--//SECTION - Overview-->
+    <div id="overview" class="container text-center mt-3">
+        <div class="row align-items-start">
+            <div class="col p-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Arbeitsstunden</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="totalWorkHours" class="card-text"></p>
+                        <hr class="mt-0 mb-3">
+                        <div id="workHoursPerMonth" class="list-group"></div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="modal__add--form" novalidate>
-                        <div class="mb-3">
-                            <label for="modal__add--vacation_date" class="form-label">Datum:</label>
-                            <input type="date" id="modal__add--vacation_date" name="vacation_date" class="form-control"
-                                required>
-                            <div class="invalid-feedback">Bitte ein Datum auswählen.</div>
-                        </div>
-                    </form>
+            </div>
+
+            <div class="col p-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Schichtstatistik</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="shiftStats" class="list-group"></div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
-                    <button type="button" id="modal__add--save-button" class="btn btn-success">Speichern</button>
+            </div>
+
+            <div class="col p-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Urlaub</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="totalVacationDays" class="card-text"></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--//!SECTION - Modal (Hinzufügen)-->
+    <!--//!SECTION - Overview-->
 
-    <!--//SECTION - Modal (Bearbeiten)-->
-    <div class="modal" id="modal__edit" tabindex="-1" aria-labelledby="modal__edit--title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark">
-                <!-- Error Alert -->
-                <div id="modal__edit--error"></div>
-
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal__edit--title">Urlaubseintrag bearbeiten:</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="modal__edit--form" novalidate>
-                        <div class="mb-3">
-                            <label for="modal__edit--id" class="form-label">ID:</label>
-                            <input type="text" id="modal__edit--id" name="id" class="form-control" readonly required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modal__edit--vacation_date" class="form-label">Datum:</label>
-                            <input type="date" id="modal__edit--vacation_date" name="vacation_date" class="form-control"
-                                required>
-                            <div class="invalid-feedback">Bitte einen Datum eingeben.</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Abbrechen</button>
-
-                    <button type="button" id="modal__edit--delete-button" class="btn btn-danger"
-                        data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-title="Zum Bestätigen 3x schnell drücken">Löschen</button>
-
-                    <button type="button" id="modal__edit--save-button" class="btn btn-success" data-bs-toggle="tooltip"
-                        data-bs-placement="top" data-bs-title="Zum Bestätigen 3x schnell drücken">Speichern</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--//!SECTION - Modal (Bearbeiten)-->
 
     <!--//SECTION - JavaScript einbinden-->
     <!-- Bootstrap JS -->
@@ -191,7 +148,7 @@
     <!-- My JS -->
     <!-- Übergebe die Logout-URL an das JavaScript -->
     <script>const logoutUrl = "{{ url_for('logout') }}";</script>
-    <script type="module" src="{{ url_for('static', filename='js/urlaub/main.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/overview/main.js') }}"></script>
     <!--//!SECTION - JavaScript einbinden-->
 </body>
 

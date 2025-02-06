@@ -89,10 +89,16 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/urlaub")
+@app.route("/vacation")
 @login_required
 def vacation_entries():
     return render_template("urlaub.html")
+
+
+@app.route("/overview")
+@login_required
+def overview():
+    return render_template("overview.html")
 
 
 # !SECTION - Routen definieren
@@ -324,6 +330,77 @@ def manage_vacation_entry(id):
 
 
 # !SECTION - API-Routen für Urlaubseinträge
+
+
+# SECTION - API-Routen für Übersichtsdaten
+@app.route("/api/overview/work_hours", methods=["GET"])
+@login_required
+def get_work_hours():
+    year = request.args.get("year", type=int)
+    if not year:
+        return jsonify({"error": "Year is required"}), 400
+
+    # Arbeitsstunden pro Monat und Jahr berechnen
+    work_entries = WorkEntry.query.filter(
+        db.func.strftime("%Y", WorkEntry.start_time) == str(year)
+    ).all()
+    work_hours_per_month = {}
+    total_work_hours = 0
+
+    for entry in work_entries:
+        start_time = datetime.strptime(
+            entry.start_time, "%Y-%m-%dT%H:%M"
+        )  # Konvertiere start_time in datetime
+        month = start_time.strftime("%m")
+        work_hours_per_month[month] = (
+            work_hours_per_month.get(month, 0) + entry.working_time
+        )
+        total_work_hours += entry.working_time
+
+    return jsonify(
+        {
+            "total_work_hours": total_work_hours,
+            "work_hours_per_month": work_hours_per_month,
+        }
+    )
+
+
+@app.route("/api/overview/vacation", methods=["GET"])
+@login_required
+def get_vacation():
+    year = request.args.get("year", type=int)
+    if not year:
+        return jsonify({"error": "Year is required"}), 400
+
+    # Urlaubseinträge für das Jahr abrufen
+    vacation_entries = VacationEntry.query.filter(
+        db.func.strftime("%Y", VacationEntry.vacation_date) == str(year)
+    ).all()
+    total_vacation_days = len(vacation_entries)
+
+    return jsonify({"total_vacation_days": total_vacation_days})
+
+
+@app.route("/api/overview/shifts", methods=["GET"])
+@login_required
+def get_shifts():
+    year = request.args.get("year", type=int)
+    if not year:
+        return jsonify({"error": "Year is required"}), 400
+
+    # Schichtstatistik für das Jahr berechnen
+    work_entries = WorkEntry.query.filter(
+        db.func.strftime("%Y", WorkEntry.start_time) == str(year)
+    ).all()
+    shift_stats = {}
+
+    for entry in work_entries:
+        shift_stats[entry.shift] = shift_stats.get(entry.shift, 0) + 1
+
+    return jsonify(shift_stats)
+
+
+# !SECTION - API-Routen für Übersichtsdaten
 
 
 # SECTION - Tabellen erstellen
