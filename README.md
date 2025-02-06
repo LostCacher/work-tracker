@@ -1,2 +1,2 @@
 # work-tracker
- tracking working time and shifts
+ tracking working time, shifts and vacation
